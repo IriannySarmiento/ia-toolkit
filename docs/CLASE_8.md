@@ -11,8 +11,7 @@ En `backend/wrangler.jsonc`, al final:
 2. Quita las dos barras `//` delante de `"triggers": { "crons": ["30 12 * * *"] },`.
 3. **Commit changes**. Al desplegarse, el agente corre solo todos los días a las 09:30 de Chile (12:30 UTC).
 
-Verificar: en Cloudflare, Worker → **Settings** (sección de *triggers*/disparadores; verificar el nombre en
-pantalla) muestra el cron. Al día siguiente,
+Verificar: en Cloudflare, Worker → **Settings → Trigger events → Cron triggers** muestra el cron. Al día siguiente,
 `/borradores` tiene un borrador con `"motivo": "cron"` (o, si no hubo boletín nuevo, nada: es lo esperado).
 El registro de cada corrida se lee en Worker → **Logs**.
 

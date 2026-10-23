@@ -1,115 +1,206 @@
-# Paso a paso: del fork a producción
+# Paso a paso: del fork a tu agente en internet
 
-Para proyectar en clase. Los nombres **en negrita** son los textos de los botones y campos tal como aparecen en
-los paneles. Fuente: documentación oficial de Cloudflare y Vercel consultada el 22-10-2026.
+Guía para seguir en clase, pantalla por pantalla. Las capturas son del panel de Cloudflare y de Vercel al
+22-10-2026. Los números rojos de cada captura corresponden a los números del texto.
 
-> **Pendiente de verificar en pantalla (prueba 6 del spec).** Los paneles cambian. Lo marcado con ⚠ salió de la
-> documentación, no de una captura: en el ensayo con la segunda cuenta, corregir este archivo con lo que
-> realmente aparece y anotar las diferencias al final.
+![Cómo llega tu agente a internet](img/flujo-despliegue.svg)
 
-Necesitas: cuentas de GitHub, Cloudflare y Vercel verificadas por correo; la clave de Gemini de tu equipo (la
-entrega el profesor) y una clave de aprobación inventada por el equipo (una frase).
+**Antes de empezar, ten a mano:**
+
+- Tus cuentas de **GitHub**, **Cloudflare** y **Vercel**, con sesión iniciada en el mismo navegador.
+- La **clave de Gemini** de tu equipo (te la entrega el profesor).
+- Una **clave de aprobación**: una frase que invente tu equipo, por ejemplo `pauta-del-viernes`. Sirve para
+  aprobar borradores.
+
+| Paso | Qué haces | Tiempo |
+|---|---|---|
+| 0 | Fork: tu copia del repositorio | 1 min |
+| 1 | Cloudflare: publicar el agente | 5 min |
+| 2 | Cloudflare: guardar las dos claves | 3 min |
+| 3 | Primera corrida del agente | 1 min |
+| 4 | Vercel: publicar la página | 5 min |
+| 5 | Anotar tus direcciones | 1 min |
 
 ---
 
-## 0. El fork (2 minutos)
+## 0. El fork: tu copia del repositorio
 
 1. Abre **github.com/sil7en/ia-toolkit**.
-2. Arriba a la derecha: **Fork** → deja el nombre `ia-toolkit` → **Create fork**.
-3. Punto de control: estás en `github.com/<tu-usuario>/ia-toolkit` y ves `backend`, `frontend`, `docs`.
+2. Arriba a la derecha, aprieta **Fork**.
+3. En la pantalla siguiente no cambies nada: el nombre debe seguir siendo `ia-toolkit`. Aprieta **Create fork**.
+
+✅ **Punto de control:** estás en `github.com/<tu-usuario>/ia-toolkit` y ves las carpetas `backend`,
+`frontend` y `docs`.
 
 ---
 
-## 1. Backend en Cloudflare (10–15 minutos)
+## 1. Cloudflare: publicar el agente
 
-1. Entra a **dash.cloudflare.com** → menú izquierdo **Workers & Pages** (en el panel nuevo puede aparecer
-   dentro de **Compute (Workers)**).
-2. **Create application** ⚠ → elige **GitHub** (no "Pages": eso es otro producto).
-   - La primera vez, Cloudflare pide autorizar su app en GitHub: elige **Only select repositories** →
-     tu `ia-toolkit` → **Install & Authorize**.
-3. Elige el repositorio `ia-toolkit` de la lista.
-4. Pantalla **Configure your project** ⚠:
+Entra a **dash.cloudflare.com**.
 
-   | Campo | Qué escribir |
-   |---|---|
-   | **Project name** / nombre del Worker | `agente-ene` — exactamente así. Si no coincide con `name` en `backend/wrangler.jsonc`, el build falla. |
-   | **Build command** | vacío |
-   | **Deploy command** | `npx wrangler deploy` (suele venir escrito) |
-   | **Root directory** (a veces dentro de *Advanced settings*) | `backend` |
-   | **API token** | dejar el que crea Cloudflare |
-   | **Build variables and secrets** | nada: lo que se ponga aquí solo existe durante el build, **no** llega al agente |
+### 1.1 Crear la aplicación
 
-5. **Save and Deploy**. Cloudflare instala las dependencias, compila y despliega. Mide el tiempo del primer
-   build. Si falla, abre el registro del build: la última línea roja dice por qué (ver la tabla del README).
-6. **Subdominio `workers.dev`** ⚠: en una cuenta nueva, Cloudflare asigna o pide registrar un subdominio la
-   primera vez. Se ve y se cambia en **Workers & Pages** → **Your subdomain** → **Change**. Usa algo corto y
-   reconocible (tu usuario de GitHub, por ejemplo).
-7. Copia la URL que muestra el Worker: `https://ia-toolkit.<tu-subdominio>.workers.dev`.
-8. Punto de control: ábrela. Debe decir `"estado": "en línea"`, `"motor": "propio"` y
-   `"modelo": "simulado (sin clave de Gemini)"`. Todavía no hay claves: eso es lo siguiente.
+![Inicio de Cloudflare](img/pasos/cf-01-crear-app.png)
 
-### 1b. Los secretos (3 minutos)
+En la pantalla **What are we building today?**, aprieta **Create app** ①.
 
-Los secretos se agregan cuando el Worker ya existe (la pantalla de creación no tiene dónde ponerlos).
+> Si tu cuenta ya tenía algo creado, el inicio se ve distinto: entra por el menú izquierdo a
+> **Compute → Workers & Pages** y aprieta **Create application**.
 
-1. **Workers & Pages** → `ia-toolkit` → **Settings** → sección **Variables and Secrets** → **Add**.
-2. Tipo **Secret**. **Variable name**: `GEMINI_API_KEY`. **Value**: la clave del equipo.
-3. **Add variable** → Tipo **Secret**. **Variable name**: `CLAVE_APROBACION`. **Value**: la frase del equipo.
-4. **Deploy**. Esto publica una versión nueva del Worker con los secretos; no hace falta otro commit.
-5. Punto de control: recarga la URL del backend. Ahora `"modelo"` dice `gemini-…`.
+### 1.2 Conectar GitHub
 
-Los secretos quedan guardados en Cloudflare y sobreviven a los despliegues por commit. Nunca se escriben en
-GitHub.
+![Conectar GitHub](img/pasos/cf-02-conectar-github.png)
 
-### 1c. Primera corrida (2 minutos)
+Aprieta **Connect GitHub** ①. Se abre GitHub para que autorices a Cloudflare:
 
-1. Abre `https://ia-toolkit.<tu-subdominio>.workers.dev/correr?forzar=1`. Tarda entre 10 y 40 segundos.
-2. Punto de control: aparece un borrador con `titulo`, `cifras`, `fuentes` y `traza`. En la traza, busca
-   `El modelo pidió obtener_ultimo_boletin({})` y `El modelo entregó con entregar_borrador.`
+1. Elige **Only select repositories**.
+2. En la lista, elige **ia-toolkit**.
+3. Aprieta **Install & Authorize**. Vuelves a Cloudflare.
 
----
+> Si ya habías conectado GitHub antes, el botón dice **Continue with GitHub**. Si después `ia-toolkit` no
+> aparece en la lista, falta darle permiso: en GitHub ve a **Settings → Applications → Cloudflare Workers and
+> Pages → Configure**, agrega `ia-toolkit` y aprieta **Save**.
 
-## 2. Frontend en Vercel (5–8 minutos)
+### 1.3 Elegir tu repositorio
 
-1. Entra a **vercel.com** (con "Continue with GitHub") → **Add New…** → **Project**.
-2. En **Import Git Repository**, busca `ia-toolkit` → **Import**. Si no aparece: **Adjust GitHub App
-   Permissions** ⚠ → autoriza el repositorio.
-3. Pantalla de configuración:
+![Elegir el repositorio](img/pasos/cf-03-elegir-repo.png)
 
-   | Campo | Qué escribir |
-   |---|---|
-   | **Project Name** | el que quieras; define la URL `https://<nombre>.vercel.app` |
-   | **Framework Preset** | Next.js (lo detecta solo) |
-   | **Root Directory** → **Edit** | elige `frontend` → **Continue** |
-   | **Environment Variables** ⚠ | Key `NEXT_PUBLIC_API_URL`, Value la URL de tu backend **sin barra final** |
+Haz clic en **ia-toolkit** ① (aparece un ✓) y aprieta **Next** ②.
 
-4. **Deploy**. Cuando termine, **Continue to Dashboard** y copia la URL de producción.
-5. Revisa que la variable quede en **Production** y **Preview**: proyecto → **Settings** → **Environment
-   Variables**. Si la cambias después, hay que redesplegar (**Deployments** → ⋯ en el último → **Redeploy** ⚠):
-   Next.js la lee al construir la página.
-6. Punto de control, en el teléfono: la portada carga; **Forzar una corrida** muestra la traza; en
-   **Borradores**, aprueba con tu nombre y la clave de aprobación; vuelve a **La nota**: está publicada.
-   En **Preguntar**, haz una pregunta: la respuesta trae fuentes.
+### 1.4 Revisar el nombre
 
----
+![Project name](img/pasos/cf-04-project-name.png)
 
-## 3. Anota tus direcciones
+En **Project name** ① ya viene escrito `ia-toolkit`. **No lo cambies**: ese nombre tiene que coincidir con el
+que tiene el código. Tampoco toques **Build command**, **Deploy command** ni **Preview command**.
 
-En tu fork, edita `README.md` (lápiz) y completa la sección **Mis direcciones** al final. **Commit changes**.
-Este commit también sirve para comprobar que Cloudflare y Vercel se enteran de los cambios.
+### 1.5 El único dato que escribes: la carpeta `backend`
+
+![Path backend](img/pasos/cf-05-path-backend.png)
+
+Baja hasta el final del formulario:
+
+1. Abre **Advanced settings** ① (es un texto pequeño, con una flechita).
+2. En **Path** ② borra la `/` y escribe **`backend`** (en minúsculas, sin barras).
+3. Aprieta **Deploy** ③.
+
+> ⚠ Este es el paso que más se olvida. Si **Path** queda en `/`, el build falla porque Cloudflare no encuentra
+> el agente. Se arregla en el Worker → **Settings → Builds → Build configuration** → **Root directory** =
+> `backend`; luego, en la pestaña **Deployments**, abre el build fallido y aprieta **Retry build**.
+
+### 1.6 Esperar el build (alrededor de 1 minuto)
+
+![Build en curso](img/pasos/cf-06-build-en-curso.png)
+
+Cloudflare pasa por cuatro etapas ①: **Initializing → Cloning → Installing → Deploying**. Cada una se pone en
+verde al terminar. En el ensayo tardó 47 segundos.
+
+![Build listo](img/pasos/cf-07-build-listo.png)
+
+Al final del registro aparece la dirección de tu agente ①, `https://ia-toolkit.<tu-subdominio>.workers.dev`, y
+la línea **Success! Build completed.** ②. Copia la dirección.
+
+> Si Cloudflare te pide elegir un **subdominio workers.dev** (en cuentas nuevas puede pasar la primera vez),
+> escribe algo corto y tuyo, por ejemplo tu usuario de GitHub. Ese subdominio queda en tu dirección.
+
+✅ **Punto de control:** abre `https://ia-toolkit.<tu-subdominio>.workers.dev/` en otra pestaña. Debe decir
+`"estado": "en línea"` y `"modelo": "simulado (sin clave de Gemini)"`. Que diga *simulado* es lo esperado:
+todavía no le das la clave.
 
 ---
 
-## Resultado del ensayo (completar después de la prueba 6 del spec)
+## 2. Cloudflare: guardar las dos claves
 
-| Paso | Tiempo real | ¿La pantalla coincidió con lo escrito? Diferencias |
+Las claves (secretos) no van en GitHub: se guardan en Cloudflare, cifradas.
+
+![Secretos](img/pasos/cf-08-secretos.png)
+
+1. En tu Worker `ia-toolkit`, entra a la pestaña **Settings**.
+2. En **Runtime variables and secrets**, aprieta **Add variable** ①.
+
+![Agregar un secreto](img/pasos/cf-09-agregar-secreto.png)
+
+3. En el cuadro **Add environment variable** deja marcado **Production**. Escribe ①:
+   - **Key**: `GEMINI_API_KEY`
+   - **Value**: la clave de Gemini de tu equipo
+4. Marca la casilla **Secret** ② (si no la marcas, la clave queda visible para cualquiera con acceso al panel).
+5. Aprieta **+ Add** (debajo, a la izquierda) para agregar una segunda fila y escribe:
+   - **Key**: `CLAVE_APROBACION`
+   - **Value**: la frase de tu equipo
+   - y marca **Secret** también.
+6. Aprieta **Add variable and deploy** ③.
+
+Cuando termine, la tabla se ve como en la primera captura ②: dos filas de tipo **Secret** que dicen
+*Value encrypted*.
+
+> **No cambies las otras variables** (`NOMBRE_EQUIPO`, `MOTOR`, `GEMINI_MODELOS`, `MAX_PASOS`) en esta tabla. Se
+> cambian en el archivo `backend/wrangler.jsonc` de GitHub; si las cambias aquí, el próximo commit las vuelve a
+> dejar como estaban, y Cloudflare muestra el aviso *Update your Wrangler configuration*.
+
+✅ **Punto de control:** recarga `https://ia-toolkit.<tu-subdominio>.workers.dev/`. Ahora `"modelo"` dice
+`gemini-…`.
+
+---
+
+## 3. Primera corrida del agente
+
+Abre en el navegador:
+
+```
+https://ia-toolkit.<tu-subdominio>.workers.dev/correr?forzar=1
+```
+
+Tarda entre 20 y 30 segundos: el agente está leyendo el boletín del INE y escribiendo. Aparece un borrador.
+Busca la parte `"traza"`: es la bitácora de lo que hizo, paso a paso.
+
+![Qué pasa en una corrida](img/bucle-agente.svg)
+
+En el ensayo, la traza fue:
+
+| # | Tipo | Qué dice |
 |---|---|---|
-| 0. Fork | | |
-| 1. Worker creado + primer build | | |
-| 1b. Secretos | | |
-| 1c. Primera corrida | | |
-| 2. Vercel | | |
-| Commit en `objetivo.md` → redespliegue de Cloudflare | | |
-| Commit en `marca.ts` → redespliegue de Vercel | | |
-| Tarea a Jules → PR → CI → merge → traza | | |
-| Sync fork sin conflictos | | |
+| 1 | encargo | Hoy es 22 de octubre de 2026. Corrida disparada por: una persona (botón)… |
+| 2 | herramienta | El modelo pidió `obtener_ultimo_boletin({})` |
+| 3 | resultado | `obtener_ultimo_boletin` devolvió el boletín 335 (INE en vivo; tasa 9,6%) |
+| 4 | fin | El modelo entregó con `entregar_borrador`. |
+| 5 | limite | Los límites no encontraron problemas. |
+
+✅ **Punto de control:** el borrador tiene `titulo`, `cifras` (cada una con su `fuente`) y `"modelo":
+"gemini-…"`. Si sale `{"error": "Ya hay una corrida en curso…"}`, espera 20 segundos y recarga.
+
+---
+
+## 4. Vercel: publicar la página
+
+*(En preparación: capturas del panel de Vercel.)*
+
+1. Entra a **vercel.com** → **Add New…** → **Project**.
+2. En **Import Git Repository**, busca `ia-toolkit` → **Import**. Si no aparece: **Configure GitHub App** →
+   agrega `ia-toolkit` → **Save**.
+3. **Root Directory** → **Edit** → elige `frontend` → **Continue**.
+4. **Environment Variables**: Key `NEXT_PUBLIC_API_URL`, Value la dirección de tu agente **sin barra final**.
+5. **Deploy**.
+
+✅ **Punto de control (en el teléfono):** la portada carga; **Forzar una corrida** muestra la traza; en
+**Borradores** apruebas con tu nombre y la clave de aprobación; en **La nota** aparece publicada.
+
+---
+
+## 5. Anota tus direcciones
+
+En tu fork, abre `README.md`, aprieta el lápiz ✎, completa la sección **Mis direcciones** al final y aprieta
+**Commit changes**. Ese commit además prueba que Cloudflare y Vercel vuelven a desplegar solos.
+
+---
+
+## Resultado del ensayo (22-10-2026)
+
+| Paso | Resultado |
+|---|---|
+| Build de Cloudflare (Workers Builds) | 47 s: inicialización 5 s, clonado 2 s, instalación 18 s, despliegue 25 s. Node 24 y npm 10 detectados solos; `.npmrc` respetado. |
+| `GET /` recién desplegado | `en línea`, modelo simulado |
+| `/correr?forzar=1`, modelo simulado | 8 s |
+| `/correr?forzar=1`, Gemini, motor `propio` | 25 s, `gemini-3.6-flash`, 6 cifras con fuente, sin problemas en los límites |
+| `/correr?forzar=1`, Gemini, motor `adk` | 26 s, `gemini-3.6-flash`, 5 cifras con fuente, sin problemas en los límites |
+| `/preguntar` (Gemini) | 6–10 s; la pregunta por una comuna responde "no consta" |
+| Diferencias con la documentación oficial | El flujo se llama **Create app / Create application** (no "Import a repository"); el directorio raíz se llama **Path** y está dentro de **Advanced settings**; los secretos se agregan después del primer deploy |
