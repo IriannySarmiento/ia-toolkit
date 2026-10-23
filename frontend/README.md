@@ -6,14 +6,19 @@ el backend por HTTP; no tiene claves ni memoria propias.
 
 ## Configuración en Vercel (una vez)
 
+Vercel detecta dos aplicaciones en el repositorio (`backend` y `frontend`). En la fila **frontend**, aprieta
+**Import single project**; con eso quedan:
+
 | Campo en Vercel | Valor |
 |---|---|
 | Repositorio | tu fork de `ia-toolkit` |
-| **Root Directory** | `frontend` (botón *Edit* junto al campo) |
-| Framework Preset | Next.js (Vercel lo detecta solo) |
-| Build / Output / Install Command | sin tocar |
+| **Root Directory** | `frontend` (lo pone **Import single project**) |
+| Application Preset | Next.js |
+| Build and Output Settings | sin tocar |
 | **Environment Variables** | `NEXT_PUBLIC_API_URL` = la URL de tu backend, **sin barra final**. Ej.: `https://ia-toolkit.tu-subdominio.workers.dev` |
-| Entornos de la variable | Production y Preview |
+| Environments | Production and Preview (viene así) |
+
+Guía con capturas: [docs/PASO_A_PASO.md](../docs/PASO_A_PASO.md#4-vercel-publicar-la-página).
 
 Si la variable falta o está mal escrita, la portada lo dice con el nombre exacto de la variable. Como Next.js
 la lee al construir la página, después de cambiarla hay que volver a desplegar: **Deployments → ⋯ → Redeploy**.

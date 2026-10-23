@@ -10,26 +10,23 @@ a Jules.
 
 ## Cómo llega tu agente a internet
 
-```
-  sil7en/ia-toolkit        tu fork            Cloudflare (backend)          tu agente
-  (repositorio maestro) ─▶ tu-usuario/   ─┬─▶ build + deploy ─────────▶ https://ia-toolkit.<tu-subdominio>.workers.dev
-                           ia-toolkit     │
-                           (tu copia)     └─▶ Vercel (frontend) ───────▶ https://<tu-proyecto>.vercel.app
-                              ▲
-                              └── cada commit en main vuelve a desplegar lo que cambió
-```
+![Cómo llega tu agente a internet](docs/img/flujo-despliegue.svg)
+
+## Las piezas del agente
+
+![Las piezas del Agente ENE](docs/img/arquitectura.svg)
 
 ## Los cinco pasos de la clase
 
 | # | Paso | Punto de control: abre esto | Debe verse |
 |---|---|---|---|
 | 1 | **Fork**: en github.com/sil7en/ia-toolkit, botón *Fork* → *Create fork* | `github.com/<tu-usuario>/ia-toolkit` | Tu copia, con las carpetas `backend` y `frontend` |
-| 2 | **Backend en Cloudflare**: crear el Worker desde tu fork (ver [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md)) | `https://ia-toolkit.<tu-subdominio>.workers.dev/` | `"estado": "en línea"` y `"modelo": "simulado…"` |
+| 2 | **Backend en Cloudflare**: Create app → tu repo → *Advanced settings* → **Path** = `backend` → Deploy | `https://ia-toolkit.<tu-subdominio>.workers.dev/` | `"estado": "en línea"` y `"modelo": "simulado…"` |
 | 3 | **Secretos**: en Cloudflare, Settings → Variables and Secrets: `GEMINI_API_KEY` y `CLAVE_APROBACION` | la misma URL, recargada | `"modelo": "gemini-…"` |
 | 4 | **Primera corrida**: abre `/correr?forzar=1` en el navegador | `https://ia-toolkit.<tu-subdominio>.workers.dev/correr?forzar=1` | Un borrador con su `traza`: qué pidió el modelo y qué recibió |
-| 5 | **Frontend en Vercel**: importar tu fork, carpeta `frontend`, variable `NEXT_PUBLIC_API_URL` | `https://<tu-proyecto>.vercel.app` | La portada; *Forzar una corrida*; aprobar en *Borradores*; la nota publicada |
+| 5 | **Frontend en Vercel**: Import → **Import single project** en `frontend` → variable `NEXT_PUBLIC_API_URL` → Deploy | `https://<tu-proyecto>.vercel.app` | La portada; *Forzar una corrida*; aprobar en *Borradores*; la nota publicada |
 
-Guía con cada pantalla y cada campo: [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md). Qué es un fork, un commit
+**Guía con capturas de cada pantalla: [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md).** Qué es un fork, un commit
 o un pull request: [docs/FLUJO_GIT.md](docs/FLUJO_GIT.md). Cómo pedirle cambios a Jules:
 [docs/JULES.md](docs/JULES.md).
 
@@ -50,10 +47,12 @@ plantilla de issue "Nueva herramienta".
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
 | El build de Cloudflare falla con "Worker name … must match" | En *Project name* se escribió otra cosa que `ia-toolkit` | Créalo de nuevo dejando el nombre que propone Cloudflare: `ia-toolkit` |
+| El build de Cloudflare falla, o Cloudflare abre un pull request para "configurar" el proyecto | **Path** quedó en `/` | Worker → Settings → Builds → Root directory = `backend` → Deployments → Retry build |
 | El build de Cloudflare falla en la instalación (`npm ci`, `ERESOLVE` o "lock file") | Se borró o cambió `backend/.npmrc`, o se editó `package.json` a mano | Restaurar `.npmrc` (una línea: `legacy-peer-deps=true`) y deshacer el cambio de `package.json` |
 | `GET /` dice `"modelo": "simulado (sin clave de Gemini)"` | La clave de Gemini no está en el panel | Settings → Variables and Secrets → Add → Secret `GEMINI_API_KEY` → Deploy |
 | Aprobar dice "Clave de aprobación incorrecta" | Falta el secreto `CLAVE_APROBACION` o se escribió distinto | Revisarlo en el panel; se distingue mayúscula de minúscula |
-| La portada dice "Falta la variable NEXT_PUBLIC_API_URL" | La variable no está en Vercel | Vercel → Settings → Environment Variables → agregarla → Deployments → Redeploy |
+| La portada dice "Falta la variable NEXT_PUBLIC_API_URL" | La variable no está en Vercel | Vercel → Settings → Environment Variables → agregarla → Deployments → ⋯ → Redeploy |
+| Vercel falla diciendo que falta `vercel.json` | Se apretó Deploy en la pantalla de *Services* | Importar de nuevo y elegir **Import single project** en la fila `frontend` |
 | La portada dice "No pude hablar con el backend en …" | La URL está mal escrita o el backend no está desplegado | Abrir esa URL; debe responder `"estado": "en línea"`. Sin barra final |
 | `/correr` responde 409 | Ya hay una corrida en curso | Esperar 20 segundos y repetir |
 | La traza dice "INE no respondió; usé el corpus local" | El sitio del INE no respondió desde Cloudflare | Nada: es el plan B previsto, el agente siguió con los boletines conocidos |
@@ -66,8 +65,9 @@ El bucle del agente tiene dos implementaciones, y se elige con la variable `MOTO
 `propio` (el bucle de `backend/src/agente/bucle.ts`, para leerlo entero) o `adk` (el Agent Development Kit de
 Google, `backend/src/agente/motor-adk.ts`). Las herramientas, la memoria y la traza son las mismas.
 
-**Valor por defecto: `propio`.** La decisión definitiva se toma después de las pruebas con clave real y en
-producción (sección 7 del spec) y se anota aquí.
+**Valor por defecto: `propio`.** En el ensayo del 22-10-2026 los dos motores funcionaron en producción con
+Gemini (`gemini-3.6-flash`): 25 s el propio y 26 s el ADK por corrida, con la misma calidad de borrador. Se
+deja `propio` porque es el que los estudiantes pueden leer entero.
 
 ## Mis direcciones
 

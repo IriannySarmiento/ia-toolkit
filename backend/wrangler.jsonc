@@ -11,6 +11,8 @@
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  // Cada rama (por ejemplo, la de un pull request de Jules) recibe su propia URL de vista previa.
+  "preview_urls": true,
 
   // Logs en el panel de Cloudflare (Workers → Logs). Sirven para leer qué hizo el agente.
   "observability": { "enabled": true },

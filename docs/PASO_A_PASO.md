@@ -172,17 +172,65 @@ En el ensayo, la traza fue:
 
 ## 4. Vercel: publicar la página
 
-*(En preparación: capturas del panel de Vercel.)*
+Entra a **vercel.com/new** (o, desde tu panel de Vercel, **Add New… → Project**).
 
-1. Entra a **vercel.com** → **Add New…** → **Project**.
-2. En **Import Git Repository**, busca `ia-toolkit` → **Import**. Si no aparece: **Configure GitHub App** →
-   agrega `ia-toolkit` → **Save**.
-3. **Root Directory** → **Edit** → elige `frontend` → **Continue**.
-4. **Environment Variables**: Key `NEXT_PUBLIC_API_URL`, Value la dirección de tu agente **sin barra final**.
-5. **Deploy**.
+### 4.1 Importar tu repositorio
 
-✅ **Punto de control (en el teléfono):** la portada carga; **Forzar una corrida** muestra la traza; en
-**Borradores** apruebas con tu nombre y la clave de aprobación; en **La nota** aparece publicada.
+![Importar el repositorio](img/pasos/vc-01-importar.png)
+
+En **Import Git Repository**, busca la fila **ia-toolkit** ① y aprieta **Import**.
+
+> Si `ia-toolkit` no aparece, aprieta **Adjust GitHub App Permissions** (debajo de la lista), agrega
+> `ia-toolkit` a los repositorios permitidos, guarda y vuelve a esta página.
+
+### 4.2 Elegir solo la carpeta `frontend`
+
+![Vercel detecta dos aplicaciones](img/pasos/vc-02-dos-aplicaciones.png)
+
+Vercel encuentra dos aplicaciones en tu repositorio (`backend` y `frontend`) y propone juntarlas
+(**Application Preset: Services** ①). **No aprietes Deploy en esta pantalla.** En la fila **frontend**, aprieta
+**Import single project** ②.
+
+### 4.3 La dirección de tu agente
+
+![Configurar el proyecto](img/pasos/vc-03-proyecto-frontend.png)
+
+1. Comprueba que **Root Directory** diga `frontend` ① y **Application Preset**, `Next.js`.
+2. Abre **Environment Variables** y escribe:
+   - **Key** ②: `NEXT_PUBLIC_API_URL`
+   - **Value** ③: la dirección de tu agente que copiaste en el paso 1.6, **sin barra al final**. Por ejemplo
+     `https://ia-toolkit.tu-subdominio.workers.dev`. El valor se ve con puntitos: aprieta el ojo 👁 para
+     revisarlo.
+3. Deja **Environments** ④ en **Production and Preview**.
+4. Aprieta **Deploy** ⑤.
+
+### 4.4 Esperar y copiar la dirección (alrededor de 40 segundos)
+
+![Listo](img/pasos/vc-04-listo.png)
+
+Cuando aparece **Congratulations!** con una miniatura de tu página, ya está publicada. Aprieta
+**Continue to Project**.
+
+![Tu dirección en Vercel](img/pasos/vc-05-dominio.png)
+
+Tu dirección es la que aparece en **Domains** ①. Vercel le agrega una palabra al azar si `ia-toolkit` ya está
+tomado (en el ensayo fue `ia-toolkit-delta.vercel.app`). Usa siempre la de **Domains**, no la larga de
+**Deployment**.
+
+✅ **Punto de control (en el teléfono):** abre tu dirección de Vercel. Aprieta **Forzar una corrida** ①: en unos
+20 segundos aparece el aviso verde y la traza del agente ②.
+
+![La portada con la traza](img/pasos/fe-01-traza.png)
+
+Después:
+
+1. **Borradores** → abre el borrador → escribe tu nombre y la clave de aprobación → **Aprobar y publicar**.
+2. **La nota**: aparece publicada, con sus cifras y fuentes.
+3. **Preguntar**: escribe una pregunta; la respuesta trae fuentes.
+
+> Si la portada dice **"Falta la variable NEXT_PUBLIC_API_URL"** o **"No pude hablar con el backend"**: en
+> Vercel, **Settings → Environment Variables**, corrige el valor (sin barra final) y luego **Deployments** → ⋯
+> del último deploy → **Redeploy**. La página lee esa variable al construirse, por eso hay que volver a desplegar.
 
 ---
 
@@ -203,4 +251,6 @@ En tu fork, abre `README.md`, aprieta el lápiz ✎, completa la sección **Mis 
 | `/correr?forzar=1`, Gemini, motor `propio` | 25 s, `gemini-3.6-flash`, 6 cifras con fuente, sin problemas en los límites |
 | `/correr?forzar=1`, Gemini, motor `adk` | 26 s, `gemini-3.6-flash`, 5 cifras con fuente, sin problemas en los límites |
 | `/preguntar` (Gemini) | 6–10 s; la pregunta por una comuna responde "no consta" |
-| Diferencias con la documentación oficial | El flujo se llama **Create app / Create application** (no "Import a repository"); el directorio raíz se llama **Path** y está dentro de **Advanced settings**; los secretos se agregan después del primer deploy |
+| Deploy de Vercel | ~40 s. Vercel detecta `backend` (Hono) y `frontend` (Next.js) y propone *Services*; con **Import single project** en `frontend` queda Root Directory `frontend` y preset Next.js solos. Environments viene en *Production and Preview*. |
+| Portada en Vercel → **Forzar una corrida** | 18–20 s, borrador y traza de 5 pasos en pantalla |
+| Diferencias con la documentación oficial | El flujo se llama **Create app / Create application** (no "Import a repository"); el directorio raíz se llama **Path** y está dentro de **Advanced settings**; los secretos se agregan después del primer deploy. En Vercel no hay botón **Edit** en Root Directory: se usa **Import single project**. |

@@ -70,5 +70,5 @@ hasta completar las pruebas 3 y 6 del spec.
 
 | Fecha | Motor | Modelo que respondió | Tiempo de `/correr?forzar=1` | Resultado / error textual |
 |---|---|---|---|---|
-| | propio | | | |
-| | adk | | | |
+| 22-10-2026 | propio | gemini-3.6-flash | 25 s | Borrador con 6 cifras con fuente, sin problemas en los límites. `/preguntar`: 6–10 s |
+| 22-10-2026 | adk | gemini-3.6-flash | 26 s | Borrador con 5 cifras con fuente, sin problemas en los límites, sin errores de CPU. `/preguntar`: 6 s |
