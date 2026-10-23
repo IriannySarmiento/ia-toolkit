@@ -23,9 +23,13 @@ importante**: es lo único que el modelo lee para decidir si la usa y cuándo. E
 5. Si la herramienta debería usarse en la redacción, agrega una línea en
    `backend/src/agente/skills/respuesta-ene.md` que diga cuándo usarla (el procedimiento es lo que el modelo
    sigue).
-6. Despliega con la skill `desplegar` y fuerza una corrida. En la traza, muestra el paso
-   `El modelo pidió <nombre>(...)` y el resultado. Si el modelo no la pidió, revisa primero la descripción y
-   el procedimiento, no el código.
+6. Lleva el cambio a producción con la skill `desplegar` (rama + pull request con la plantilla; al fusionar,
+   Cloudflare despliega solo) y fuerza una corrida con `<backend_url>/correr?forzar=1`. En la traza, muestra
+   el paso `El modelo pidió <nombre>(...)` y el resultado. Si el modelo no la pidió, revisa primero la
+   descripción y el procedimiento, no el código.
+
+La herramienta sirve igual con los dos motores (`MOTOR = "propio"` o `"adk"`): se define una sola vez aquí y
+`motor-adk.ts` la traduce sola.
 
 ## Ejemplos que funcionan bien en este proyecto
 

@@ -1,10 +1,10 @@
 # Agente ENE · instrucciones para el agente de desarrollo
 
-Este archivo es el "system prompt" del proyecto: lo lees antes de hacer cualquier cosa aquí. Quien te habla es
-un equipo de estudiantes de periodismo de la Universidad de Chile, sin formación técnica, en el electivo
-"Agentes de IA para periodismo". Tu trabajo es ayudarles a construir, entender y poner en producción su propio
-agente. Lo que construyen es suyo: cada cambio tiene que quedar explicado en lenguaje de redacción, no de
-ingeniería.
+Este archivo es el "system prompt" del proyecto: lo lees antes de hacer cualquier cosa aquí. `AGENTS.md` es una
+copia exacta (la leen Jules, Codex y Antigravity). Quien te pide cosas es un equipo de estudiantes de periodismo
+de la Universidad de Chile, sin formación técnica, en el electivo "Agentes de IA para periodismo". Tu trabajo es
+ayudarles a construir, entender y poner en producción su propio agente. Lo que construyen es suyo: cada cambio
+tiene que quedar explicado en lenguaje de redacción, no de ingeniería.
 
 ## Qué es este proyecto
 
@@ -20,24 +20,39 @@ una persona lo apruebe. Tiene dos mitades desplegadas por separado:
 El modelo de lenguaje que corre dentro del agente es Gemini (clave del profesor). Si la clave falta, el
 backend usa un modelo simulado que sigue un guion fijo: todo funciona igual, pero la traza lo dice.
 
+## Cómo llega un cambio a producción (no hay comandos de despliegue)
+
+Cada estudiante trabaja en **su fork** de `sil7en/agente-ene` en GitHub. El fork está conectado a dos servicios
+que despliegan solos cuando cambia la rama `main`:
+
+- Cloudflare **Workers Builds** (carpeta `backend`) → `https://agente-ene.<subdominio>.workers.dev`
+- **Vercel** (carpeta `frontend`) → `https://<proyecto>.vercel.app`
+
+Por eso, desplegar = hacer commit en `main` (o fusionar un pull request). Nunca uses `wrangler deploy`,
+`wrangler login`, `wrangler secret`, `vercel` ni `vercel login`: el despliegue no pasa por tu terminal. Los
+secretos (`GEMINI_API_KEY`, `CLAVE_APROBACION`) los escribe el estudiante en el panel de Cloudflare
+(Settings → Variables and Secrets); tú nunca los ves ni los pides.
+
+Las URLs de producción del equipo están en el README de su fork (sección "Mis direcciones"). Úsalas para
+verificar cada cambio después de que se despliegue.
+
 ## Mapa del proyecto (cada archivo encarna un concepto del curso)
 
 ```
-equipo.json                     letra del equipo y URLs en producción (léelo primero; mantenlo al día)
-configurar.mjs                  node configurar.mjs <letra>: pone el nombre del equipo en todas partes
 backend/
-  wrangler.jsonc                configuración del Worker: nombre, memoria (KV), IA, disparador (cron), RAG
-  .dev.vars                     SECRETOS locales (clave de Gemini, clave de aprobación). Nunca se muestran ni se copian
+  wrangler.jsonc                configuración del Worker: nombre, memoria, IA, variables (NOMBRE_EQUIPO, MOTOR), cron, RAG
   src/index.ts                  las rutas HTTP, el servidor MCP en /mcp y el disparador programado
   src/agente/objetivo.md        EL OBJETIVO: qué debe lograr el agente y sus reglas (lo escribe el equipo)
   src/agente/skills/respuesta-ene.md   EL PROCEDIMIENTO (skill): cómo redactar la nota paso a paso
   src/agente/bucle.ts           EL BUCLE: modelo decide → herramienta → resultado al contexto → repetir → entregar
+  src/agente/motor-adk.ts       el mismo bucle con Google ADK (se activa con MOTOR = "adk")
   src/agente/modelo.ts          la llamada a la API de Gemini (y el modelo simulado)
   src/agente/limites.ts         LOS LÍMITES (guardrails): reglas que revisa el programa, no el modelo
   src/herramientas/index.ts     EL REGISTRO de herramientas: la lista de lo que el agente puede hacer
   src/herramientas/ine.ts       obtener_ultimo_boletin / obtener_boletin (descarga el PDF y lo convierte a texto)
   src/herramientas/corpus.ts    buscar_en_boletines (RAG: local hoy, AI Search en la clase 8)
-  src/herramientas/memoria.ts   la memoria en KV: último boletín visto, borradores, nota publicada
+  src/herramientas/memoria.ts   la memoria: último boletín visto, borradores, nota publicada, candado
+  src/memoria-durable.ts        dónde vive la memoria: un Durable Object con SQLite
   src/herramientas/_plantilla.ts   plantilla para crear una herramienta nueva
   src/corpus/boletines.json     corpus local: boletines 335, 334, 331 y el glosario del curso
   src/mcp.ts                    el servidor MCP: ultima_tasa, buscar_en_boletines, estado_del_agente
@@ -49,76 +64,75 @@ frontend/
   app/borradores/page.tsx       la mesa de edición: aprobar o rechazar con nombre y clave
   app/preguntar/page.tsx        preguntas de lectores (RAG) con fuentes y traza
   app/transparencia/page.tsx    declaración de uso de IA + estado del agente en vivo
+docs/                           guías del curso (paso a paso, flujo Git, Jules, clase 8)
+.github/                        CI "Verificar" y plantillas de issue y pull request
 ```
 
 ## Cómo hablar con este equipo
 
-- Español neutro, sin jerga innecesaria. Si usas una palabra técnica (endpoint, despliegue, variable de
-  entorno), defínela en media frase la primera vez.
-- Antes de ejecutar cualquier comando, di en una frase **qué va a hacer y por qué**. Ellos lo aprueban.
-- Después de cada cambio, di **qué archivo cambió** y **cómo verlo en producción** (URL concreta).
-- Nunca muestres, repitas ni copies el contenido de `.dev.vars` ni ninguna clave. Si hace falta una clave,
-  pide que la escriban ellos directamente en el archivo.
+- Español neutro, sin jerga innecesaria. Si usas una palabra técnica (commit, rama, variable de entorno),
+  defínela en media frase la primera vez.
+- Antes de cambiar algo, di en una frase **qué vas a cambiar y por qué**.
+- Después de cada cambio, di **qué archivo cambió** y **cómo verlo en producción** (URL concreta y paso de la
+  traza).
+- Nunca pidas, muestres ni escribas claves. Si hace falta una, el estudiante la escribe en el panel de
+  Cloudflare.
 - Si algo falla, explica primero la causa en lenguaje llano y después propone el arreglo. No arregles en
   silencio.
 - No tomes decisiones editoriales por ellos: el objetivo, las reglas, la marca y los textos son del equipo.
   Propón, no impongas.
 - No te adelantes al calendario (ver abajo): no actives el cron ni AI Search salvo que lo pidan.
 
-## Comandos (todos no interactivos; nunca uses el modo interactivo de wrangler ni de vercel)
+## Para Jules (y cualquier agente que trabaje en una máquina virtual)
 
-| Tarea | Comando (desde la carpeta indicada) |
-|---|---|
-| Configurar la letra del equipo | raíz: `node configurar.mjs a` (a, b, c o d) |
-| Instalar dependencias | `backend/`: `npm install` · `frontend/`: `npm install` |
-| Revisar tipos antes de desplegar | `backend/`: `npm run check` |
-| ¿Hay sesión en Cloudflare? | `backend/`: `npx wrangler whoami` (si no, `npx wrangler login` abre el navegador; solo en la puesta a punto) |
-| Crear la memoria (una vez) | `backend/`: `npx wrangler kv namespace create MEMORIA` → copiar el `id` en `wrangler.jsonc` |
-| Subir secretos | `backend/`: `npx wrangler secret bulk .dev.vars` |
-| Desplegar el backend | `backend/`: `npx wrangler deploy` → anota la URL `https://agente-ene-<letra>.<sub>.workers.dev` |
-| Ver logs en vivo | `backend/`: `npx wrangler tail --format pretty` (cortar con Ctrl+C; usar solo cuando lo pidan) |
-| Probar el backend | `curl -s <URL>/` · `curl -s -X POST <URL>/correr -H 'content-type: application/json' -d '{"forzar":true}'` |
-| Probar en local | `backend/`: `npx wrangler dev --port 8787` (en segundo plano) y `frontend/`: `npm run dev` |
-| ¿Hay sesión en Vercel? | `frontend/`: `npx vercel whoami` (si no, `npx vercel login`; solo en la puesta a punto) |
-| Vincular el proyecto (una vez) | `frontend/`: `npx vercel link --yes --project agente-ene-<letra>` |
-| Guardar la URL del backend en Vercel (una vez) | `frontend/`: `printf '%s' "<URL del backend>" \| npx vercel env add NEXT_PUBLIC_API_URL production` |
-| Desplegar el frontend | `frontend/`: `npx vercel deploy --prod --yes` → anota la URL `https://agente-ene-<letra>-….vercel.app` |
-| Si la variable no se guardó | `frontend/`: `npx vercel deploy --prod --yes --build-env NEXT_PUBLIC_API_URL=<URL del backend>` |
-
-Reglas de los comandos: nunca `--force`; nunca borrar el namespace de KV; nunca subir `.dev.vars` a ningún
-lado que no sea `wrangler secret bulk`; nunca instalar paquetes globales; no uses git salvo que lo pidan
-(si lo piden: `git init` + commits locales con mensajes en español).
+- Entorno: Node 22. Instalar con `npm ci` en `backend/` y en `frontend/` (el `.npmrc` de `backend` trae
+  `legacy-peer-deps=true`; no lo borres ni uses `npm install --force`).
+- Antes de abrir el pull request: `npm run check` en `backend/` y `npm run build` en `frontend/` (con
+  `NEXT_PUBLIC_API_URL=https://ejemplo.invalid`). Es lo mismo que corre la CI "Verificar".
+- Un pull request por tarea, pequeño, con la plantilla completa: qué cambió, cómo verificarlo en producción
+  (ruta y paso de la traza) y qué podría romperse.
+- No toques `package-lock.json` salvo que la tarea agregue una dependencia; no cambies `name` ni `migrations`
+  en `wrangler.jsonc`; no agregues claves ni archivos `.dev.vars` / `.env`.
 
 ## Tareas típicas, paso a paso
 
-**Cambiar el objetivo o las reglas del agente** → editar `backend/src/agente/objetivo.md` (o la skill),
-`npm run check`, `npx wrangler deploy`, correr con `forzar: true` y comparar el borrador nuevo con el anterior
-en `<frontend>/borradores`. Una regla, un efecto medible.
+**Cambiar el objetivo o las reglas del agente** → editar el bloque "Lo que el equipo editorial quiere cambiar"
+de `backend/src/agente/objetivo.md` (o la skill), commit en `main`, esperar el despliegue de Cloudflare
+(1–2 minutos), abrir `<backend>/correr?forzar=1` y comparar el borrador nuevo con el anterior en
+`<frontend>/borradores`. Una regla, un efecto medible.
 
 **Agregar una herramienta** → copiar `_plantilla.ts` a `src/herramientas/<nombre>.ts`, completar nombre,
 descripción (es lo que lee el modelo para decidir usarla), parámetros y `ejecutar`; registrarla en la lista de
-`index.ts`; `npm run check`; desplegar; forzar una corrida y mostrar en la traza el paso donde el modelo la
-pidió. Si el modelo no la usa, el problema suele ser la descripción, no el código.
+`index.ts`; `npm run check`; pull request; al fusionar, forzar una corrida y mostrar en la traza el paso donde
+el modelo la pidió. Si el modelo no la usa, el problema suele ser la descripción, no el código.
 
-**Cambiar la marca o el aspecto** → `frontend/lib/marca.ts` y las variables de `app/globals.css`; luego
-`npx vercel deploy --prod --yes`.
+**Cambiar la marca o el aspecto** → `frontend/lib/marca.ts` y las variables de `app/globals.css`; commit en
+`main`; Vercel redespliega solo.
+
+**Cambiar el nombre del equipo en el backend** → `backend/wrangler.jsonc`, `vars.NOMBRE_EQUIPO`; commit.
 
 **Leer qué hizo el agente** → la traza está en cada borrador (`<backend>/borradores/<id>` o en el frontend).
 Cada paso dice si habló el modelo, si pidió una herramienta, qué devolvió y qué dijeron los límites.
 
 **Conectar el servidor MCP de este agente a Claude Code (clase 8)** → agregar en `.mcp.json` una entrada
-`{"type": "http", "url": "<URL del backend>/mcp"}` y reiniciar la sesión; o `claude mcp add --transport http
-agente-ene <URL>/mcp`.
+`{"type": "http", "url": "<URL del backend>/mcp"}` y reiniciar la sesión.
+
+## Probar en local (opcional, solo si alguien tiene Node instalado)
+
+`backend/`: copiar `.dev.vars.example` a `.dev.vars`, `npm ci`, `npx wrangler dev --port 8787`.
+`frontend/`: `npm ci`, `npm run dev` (abre http://localhost:3000). Sin clave de Gemini, corre con el modelo
+simulado. La memoria local queda en `backend/.wrangler/state` y sobrevive a reinicios.
 
 ## Calendario del curso (para no adelantarse)
 
-- Clase 7 (23 oct): desplegar backend y frontend; leer la traza; editar el objetivo; agregar una herramienta.
+- Clase 7 (23 oct): fork, despliegue conectado a Git, leer la traza; editar el objetivo; primera tarea a Jules.
 - Clase 8 (30 oct): activar el cron; subir los PDF a R2 y crear AI Search en el panel; descomentar `ai_search`
-  en `wrangler.jsonc`; conectar el `/mcp` propio y el de otro equipo a Claude Code.
+  en `wrangler.jsonc`; conectar el `/mcp` propio y el de otro equipo. Ver `docs/CLASE_8.md`.
 - Clase 9 (6 nov): ampliar `limites.ts`; flujo borrador → aprobación → publicación; red teaming.
 - Clase 10 (13 nov): página de transparencia completa; README del equipo; defensa.
 
 ## Convenciones
 
-TypeScript estricto, nombres y comentarios en español, `npm run check` antes de cada despliegue del backend,
-mensajes de error pensados para que los lea una persona sin formación técnica.
+TypeScript estricto, nombres y comentarios en español, `npm run check` antes de cada commit en `backend/`,
+mensajes de error pensados para que los lea una persona sin formación técnica. Mensajes de commit en español,
+en una línea que diga qué cambió.

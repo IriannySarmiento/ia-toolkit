@@ -1,35 +1,44 @@
 ---
 name: desplegar
-description: Pone en producción los cambios del Agente ENE (backend en Cloudflare, frontend en Vercel o ambos) y comprueba que funcionan. Úsala cuando pidan "despliega", "sube los cambios", "ponlo en producción", "publica el cambio" o después de editar el objetivo, una herramienta, los límites, la marca o el estilo.
+description: Explica y acompaña cómo un cambio del Agente ENE llega a producción (por commit o pull request, con despliegue automático en Cloudflare y Vercel) y comprueba que funcionó. Úsala cuando pidan "despliega", "sube los cambios", "ponlo en producción", "publica el cambio", "¿por qué no se ve mi cambio?" o después de editar el objetivo, una herramienta, los límites, la marca o el estilo.
 ---
 
 # Desplegar
 
-Antes de empezar, di qué vas a desplegar y por qué (qué cambió). Lee `equipo.json` para conocer las URLs.
+En este proyecto **no se despliega con comandos**. El fork del equipo está conectado a Cloudflare Workers
+Builds (carpeta `backend`) y a Vercel (carpeta `frontend`): cada commit en `main` despliega solo la mitad que
+cambió. Nunca ejecutes `wrangler deploy`, `wrangler login`, `wrangler secret`, `vercel` ni `vercel login`.
 
-## Backend (si cambió algo en `backend/`)
+Antes de empezar, di qué cambió y en qué mitad (backend, frontend o ambas). Las URLs del equipo están en la
+sección "Mis direcciones" del `README.md`.
 
-1. En `backend/`: `npm run check`. Si hay errores de tipos, explícalos en lenguaje llano y arréglalos antes.
-2. `npx wrangler deploy`. Muestra la URL.
-3. Comprueba: `curl -s <backend_url>/` (debe responder "en línea"). Si el cambio afecta al agente (objetivo,
-   skill, herramientas, límites), fuerza una corrida:
-   `curl -s -X POST <backend_url>/correr -H 'content-type: application/json' -d '{"forzar":true}'`
-   y muestra la parte de la traza que demuestra el cambio (por ejemplo, el paso donde el modelo pidió la
-   herramienta nueva, o el borrador con la regla nueva aplicada). Si la respuesta es 409, hay otra corrida en
-   curso: espera 20 segundos y repite.
-4. Di en una frase qué debería notar el equipo al abrir `<frontend_url>/borradores`.
+## 1. Antes del commit
 
-## Frontend (si cambió algo en `frontend/`)
+- Si cambió algo en `backend/`: `npm run check` en `backend/`. Si hay errores de tipos, explícalos en
+  lenguaje llano y arréglalos antes.
+- Si cambió algo en `frontend/`: `npm run build` en `frontend/` (opcional si no hay Node; la CI lo hará).
 
-1. En `frontend/`: `npx vercel deploy --prod --yes`. Muestra la URL de producción.
-2. Si el error habla de `NEXT_PUBLIC_API_URL` o la página dice que no puede hablar con el backend:
-   `npx vercel deploy --prod --yes --build-env NEXT_PUBLIC_API_URL=<backend_url>`.
-3. Comprueba: `curl -s -o /dev/null -w '%{http_code}' <frontend_url>` → 200. Pide al equipo que recargue en el
-   teléfono.
+## 2. El commit (o el pull request)
 
-## Reglas
+- Cambio de texto simple (objetivo, marca, nombre del equipo): commit directo en `main`, con un mensaje en
+  español que diga qué cambió.
+- Cambio de código (herramienta, límites): rama + pull request con la plantilla completa. Esperar la marca
+  verde de "Verificar" y fusionar.
 
-- Nunca uses `--force` ni borres recursos.
-- Si el despliegue falla por sesión vencida (`wrangler login` / `vercel login`), avisa que se abrirá el
-  navegador y pide al profesor que inicie sesión; no lo intentes repetidamente.
-- Al terminar, actualiza `equipo.json` si alguna URL cambió.
+## 3. Comprobar en producción
+
+- **Backend:** esperar 1–2 minutos (Cloudflare → Worker → Deployments). Luego abrir `<backend_url>/` (debe
+  decir "en línea") y, si el cambio afecta al agente, `<backend_url>/correr?forzar=1`. Muestra la parte de la
+  traza que demuestra el cambio (el paso donde el modelo pidió la herramienta nueva, o el borrador con la regla
+  aplicada). Si responde 409, hay otra corrida en curso: esperar 20 segundos y repetir.
+- **Frontend:** esperar el despliegue en Vercel (Deployments) y pedir al equipo que recargue la página en el
+  teléfono.
+
+## Si no se ve el cambio
+
+1. ¿El commit está en `main` del fork (no en otra rama ni en el maestro)?
+2. ¿El build terminó? Cloudflare: Worker → Deployments / Builds. Vercel: Deployments. Si falló, lee la última
+   línea roja del registro y explícala.
+3. ¿Se cambió `NEXT_PUBLIC_API_URL`? Requiere **Redeploy** en Vercel.
+4. ¿Faltan secretos? `GET /` dice `modelo: simulado` → el equipo agrega `GEMINI_API_KEY` en Cloudflare
+   (Settings → Variables and Secrets). Tú nunca ves ni escribes la clave.
