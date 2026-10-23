@@ -22,7 +22,7 @@ backend usa un modelo simulado que sigue un guion fijo: todo funciona igual, per
 
 ## Cómo llega un cambio a producción (no hay comandos de despliegue)
 
-Cada estudiante trabaja en **su fork** de `sil7en/agente-ene` en GitHub. El fork está conectado a dos servicios
+Cada estudiante trabaja en **su fork** de `sil7en/ia-toolkit` en GitHub. El fork está conectado a dos servicios
 que despliegan solos cuando cambia la rama `main`:
 
 - Cloudflare **Workers Builds** (carpeta `backend`) → `https://agente-ene.<subdominio>.workers.dev`

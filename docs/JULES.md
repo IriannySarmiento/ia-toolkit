@@ -7,7 +7,7 @@ gratuito permite **15 tareas por día** (y 3 a la vez). Fuente: jules.google/doc
 ## 1. Conectar Jules a tu fork (una vez)
 
 1. Entra a **jules.google** con tu Gmail institucional y acepta el aviso de privacidad.
-2. **Connect to GitHub account** → en GitHub, elige **Only select repositories** → tu `agente-ene` →
+2. **Connect to GitHub account** → en GitHub, elige **Only select repositories** → tu `ia-toolkit` →
    autoriza. Solo tu fork: Jules no necesita ver nada más.
 3. Si después quieres cambiar el acceso: GitHub → tu foto → **Settings** → **Applications** →
    **Google Labs Jules** → **Configure** → **Repository access**.

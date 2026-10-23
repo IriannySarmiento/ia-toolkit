@@ -14,9 +14,9 @@ entrega el profesor) y una clave de aprobación inventada por el equipo (una fra
 
 ## 0. El fork (2 minutos)
 
-1. Abre **github.com/sil7en/agente-ene**.
-2. Arriba a la derecha: **Fork** → deja el nombre `agente-ene` → **Create fork**.
-3. Punto de control: estás en `github.com/<tu-usuario>/agente-ene` y ves `backend`, `frontend`, `docs`.
+1. Abre **github.com/sil7en/ia-toolkit**.
+2. Arriba a la derecha: **Fork** → deja el nombre `ia-toolkit` → **Create fork**.
+3. Punto de control: estás en `github.com/<tu-usuario>/ia-toolkit` y ves `backend`, `frontend`, `docs`.
 
 ---
 
@@ -26,8 +26,8 @@ entrega el profesor) y una clave de aprobación inventada por el equipo (una fra
    dentro de **Compute (Workers)**).
 2. **Create application** ⚠ → elige **GitHub** (no "Pages": eso es otro producto).
    - La primera vez, Cloudflare pide autorizar su app en GitHub: elige **Only select repositories** →
-     tu `agente-ene` → **Install & Authorize**.
-3. Elige el repositorio `agente-ene` de la lista.
+     tu `ia-toolkit` → **Install & Authorize**.
+3. Elige el repositorio `ia-toolkit` de la lista.
 4. Pantalla **Configure your project** ⚠:
 
    | Campo | Qué escribir |
@@ -72,7 +72,7 @@ GitHub.
 ## 2. Frontend en Vercel (5–8 minutos)
 
 1. Entra a **vercel.com** (con "Continue with GitHub") → **Add New…** → **Project**.
-2. En **Import Git Repository**, busca `agente-ene` → **Import**. Si no aparece: **Adjust GitHub App
+2. En **Import Git Repository**, busca `ia-toolkit` → **Import**. Si no aparece: **Adjust GitHub App
    Permissions** ⚠ → autoriza el repositorio.
 3. Pantalla de configuración:
 

@@ -8,7 +8,7 @@ el backend por HTTP; no tiene claves ni memoria propias.
 
 | Campo en Vercel | Valor |
 |---|---|
-| Repositorio | tu fork de `agente-ene` |
+| Repositorio | tu fork de `ia-toolkit` |
 | **Root Directory** | `frontend` (botón *Edit* junto al campo) |
 | Framework Preset | Next.js (Vercel lo detecta solo) |
 | Build / Output / Install Command | sin tocar |

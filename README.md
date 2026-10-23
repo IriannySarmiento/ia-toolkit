@@ -11,9 +11,9 @@ a Jules.
 ## Cómo llega tu agente a internet
 
 ```
-  sil7en/agente-ene        tu fork            Cloudflare (backend)          tu agente
+  sil7en/ia-toolkit        tu fork            Cloudflare (backend)          tu agente
   (repositorio maestro) ─▶ tu-usuario/   ─┬─▶ build + deploy ─────────▶ https://agente-ene.<tu-subdominio>.workers.dev
-                           agente-ene     │
+                           ia-toolkit     │
                            (tu copia)     └─▶ Vercel (frontend) ───────▶ https://<tu-proyecto>.vercel.app
                               ▲
                               └── cada commit en main vuelve a desplegar lo que cambió
@@ -23,7 +23,7 @@ a Jules.
 
 | # | Paso | Punto de control: abre esto | Debe verse |
 |---|---|---|---|
-| 1 | **Fork**: en github.com/sil7en/agente-ene, botón *Fork* → *Create fork* | `github.com/<tu-usuario>/agente-ene` | Tu copia, con las carpetas `backend` y `frontend` |
+| 1 | **Fork**: en github.com/sil7en/ia-toolkit, botón *Fork* → *Create fork* | `github.com/<tu-usuario>/ia-toolkit` | Tu copia, con las carpetas `backend` y `frontend` |
 | 2 | **Backend en Cloudflare**: crear el Worker desde tu fork (ver [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md)) | `https://agente-ene.<tu-subdominio>.workers.dev/` | `"estado": "en línea"` y `"modelo": "simulado…"` |
 | 3 | **Secretos**: en Cloudflare, Settings → Variables and Secrets: `GEMINI_API_KEY` y `CLAVE_APROBACION` | la misma URL, recargada | `"modelo": "gemini-…"` |
 | 4 | **Primera corrida**: abre `/correr?forzar=1` en el navegador | `https://agente-ene.<tu-subdominio>.workers.dev/correr?forzar=1` | Un borrador con su `traza`: qué pidió el modelo y qué recibió |
