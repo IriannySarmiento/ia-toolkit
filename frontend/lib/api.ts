@@ -1,4 +1,7 @@
 // Cómo habla el frontend con el backend. Una sola constante define dónde vive el agente.
+// NEXT_PUBLIC_API_URL se configura en Vercel (Settings → Environment Variables) y se lee al construir la
+// página: si se cambia, hay que volver a desplegar (Deployments → ⋯ → Redeploy).
+export const API_CONFIGURADA = Boolean(process.env.NEXT_PUBLIC_API_URL);
 export const API = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787").replace(/\/$/, "");
 
 export interface Cifra { nombre: string; valor: string; variacion?: string; fuente: string }

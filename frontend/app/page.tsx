@@ -2,7 +2,7 @@
 // La portada: la nota publicada. Si no hay ninguna, invita a correr el agente y muestra lo que hizo.
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api, type Borrador, type Paso } from "@/lib/api";
+import { api, API, API_CONFIGURADA, type Borrador, type Paso } from "@/lib/api";
 import { Nota } from "@/components/Nota";
 import { Traza } from "@/components/Traza";
 
@@ -19,7 +19,12 @@ export default function Portada() {
       if (r.ok) setEstado({ fase: "con-nota", nota: r.datos as Borrador });
       else setEstado({ fase: "sin-nota", mensaje: (r.datos as { mensaje?: string }).mensaje ?? "Todavía no hay una nota publicada." });
     } catch {
-      setEstado({ fase: "error", mensaje: "No pude hablar con el backend. ¿Está desplegado y configurada su URL (NEXT_PUBLIC_API_URL)?" });
+      setEstado({
+        fase: "error",
+        mensaje: API_CONFIGURADA
+          ? `No pude hablar con el backend en ${API}. Abre esa dirección en otra pestaña: si no responde, revisa el despliegue en Cloudflare; si responde, revisa que NEXT_PUBLIC_API_URL sea exactamente esa URL, sin barra final.`
+          : "Falta la variable NEXT_PUBLIC_API_URL: el frontend no sabe dónde vive su backend. En Vercel: tu proyecto → Settings → Environment Variables → agrega NEXT_PUBLIC_API_URL con la URL de tu Worker (https://agente-ene.<tu-subdominio>.workers.dev, sin barra final), marca Production y Preview, guarda y luego Deployments → ⋯ → Redeploy.",
+      });
     }
   }
   useEffect(() => { cargar(); }, []);
