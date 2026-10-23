@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 700" width="1280" height="700" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Las piezas del Agente ENE</title>
+  <defs>
+    <filter id="sombra" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1f2328" flood-opacity="0.12"/>
+    </filter>
+    <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="700" rx="24" fill="#ffffff"/>
+  <text x="40" y="58" font-size="28" font-weight="700" fill="#1f2328">Las piezas del Agente ENE</text>
+  <text x="40" y="88" font-size="17" fill="#57606a">Dos mitades en dos servicios distintos, que solo se hablan por internet (HTTP).</text>
+
+  <!-- Lector -->
+  <g filter="url(#sombra)">
+    <rect x="40" y="250" width="120" height="200" rx="22" fill="#ffffff" stroke="#1f2328" stroke-width="2.5"/>
+  </g>
+  <rect x="84" y="262" width="32" height="6" rx="3" fill="#d0d7de"/>
+  <text x="100" y="340" font-size="34" text-anchor="middle">📱</text>
+  <text x="100" y="384" font-size="15" font-weight="700" fill="#1f2328" text-anchor="middle">Lectores</text>
+  <text x="100" y="404" font-size="15" font-weight="700" fill="#1f2328" text-anchor="middle">y editores</text>
+  <line x1="164" y1="350" x2="216" y2="350" stroke="#57606a" stroke-width="2.5" marker-end="url(#f)"/>
+
+  <!-- Frontend -->
+  <g filter="url(#sombra)">
+    <rect x="222" y="190" width="240" height="320" rx="16" fill="#f6f8fa" stroke="#1f2328" stroke-width="2"/>
+  </g>
+  <text x="242" y="222" font-size="13" font-weight="700" fill="#1f2328" letter-spacing="1">FRONTEND · VERCEL</text>
+  <text x="242" y="250" font-size="19" font-weight="700" fill="#1f2328">La página pública</text>
+  <g font-size="15" fill="#1f2328">
+    <rect x="242" y="268" width="200" height="38" rx="8" fill="#ffffff" stroke="#d0d7de"/><text x="256" y="293">La nota publicada</text>
+    <rect x="242" y="314" width="200" height="38" rx="8" fill="#ffffff" stroke="#d0d7de"/><text x="256" y="339">Preguntar</text>
+    <rect x="242" y="360" width="200" height="38" rx="8" fill="#ffffff" stroke="#d0d7de"/><text x="256" y="385">Borradores (aprobar)</text>
+    <rect x="242" y="406" width="200" height="38" rx="8" fill="#ffffff" stroke="#d0d7de"/><text x="256" y="431">Transparencia</text>
+  </g>
+  <text x="242" y="478" font-size="13" fill="#57606a">frontend/ · marca.ts · globals.css</text>
+
+  <line x1="466" y1="350" x2="526" y2="350" stroke="#57606a" stroke-width="2.5" marker-end="url(#f)"/>
+  <text x="496" y="338" font-size="12" fill="#57606a" text-anchor="middle">HTTP</text>
+
+  <!-- Backend -->
+  <g filter="url(#sombra)">
+    <rect x="532" y="120" width="440" height="540" rx="18" fill="#fff8f1" stroke="#f38020" stroke-width="2.5"/>
+  </g>
+  <text x="556" y="154" font-size="13" font-weight="700" fill="#b35400" letter-spacing="1">BACKEND · CLOUDFLARE WORKER</text>
+  <text x="556" y="182" font-size="19" font-weight="700" fill="#1f2328">El agente</text>
+
+  <!-- Rutas -->
+  <rect x="556" y="198" width="392" height="74" rx="10" fill="#ffffff" stroke="#f3c79a"/>
+  <text x="572" y="222" font-size="13" font-weight="700" fill="#b35400">RUTAS (lo que se puede pedir)</text>
+  <text x="572" y="246" font-size="13.5" font-family="ui-monospace, Consolas, monospace" fill="#1f2328">/  /correr  /borradores  /aprobar</text>
+  <text x="572" y="264" font-size="13.5" font-family="ui-monospace, Consolas, monospace" fill="#1f2328">/nota  /preguntar  /mcp</text>
+
+  <!-- Agente -->
+  <rect x="556" y="286" width="392" height="230" rx="10" fill="#ffffff" stroke="#f3c79a"/>
+  <text x="572" y="310" font-size="13" font-weight="700" fill="#b35400">EL AGENTE</text>
+  <rect x="572" y="322" width="176" height="56" rx="8" fill="#fff4e8"/>
+  <text x="584" y="344" font-size="14" font-weight="700" fill="#1f2328">Objetivo</text>
+  <text x="584" y="364" font-size="12.5" fill="#57606a">objetivo.md (texto)</text>
+  <rect x="756" y="322" width="176" height="56" rx="8" fill="#fff4e8"/>
+  <text x="768" y="344" font-size="14" font-weight="700" fill="#1f2328">Procedimiento</text>
+  <text x="768" y="364" font-size="12.5" fill="#57606a">skills/respuesta-ene.md</text>
+  <rect x="572" y="386" width="360" height="56" rx="8" fill="#f38020"/>
+  <text x="752" y="410" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">El bucle</text>
+  <text x="752" y="430" font-size="12.5" fill="#ffffff" text-anchor="middle">modelo decide → herramienta → resultado → repetir</text>
+  <rect x="572" y="450" width="176" height="56" rx="8" fill="#fff4e8"/>
+  <text x="584" y="472" font-size="14" font-weight="700" fill="#1f2328">Herramientas</text>
+  <text x="584" y="492" font-size="12.5" fill="#57606a">herramientas/*.ts</text>
+  <rect x="756" y="450" width="176" height="56" rx="8" fill="#fff4e8"/>
+  <text x="768" y="472" font-size="14" font-weight="700" fill="#1f2328">Límites</text>
+  <text x="768" y="492" font-size="12.5" fill="#57606a">limites.ts</text>
+
+  <!-- Memoria -->
+  <rect x="556" y="530" width="392" height="104" rx="10" fill="#ffffff" stroke="#f3c79a"/>
+  <text x="572" y="554" font-size="13" font-weight="700" fill="#b35400">LA MEMORIA · DURABLE OBJECT</text>
+  <text x="572" y="580" font-size="14" fill="#1f2328">Último boletín visto · borradores · nota publicada</text>
+  <text x="572" y="602" font-size="13" fill="#57606a">Sobrevive entre corridas: sin ella, el agente</text>
+  <text x="572" y="620" font-size="13" fill="#57606a">publicaría lo mismo todos los días.</text>
+
+  <!-- Externos -->
+  <g font-size="15">
+    <line x1="976" y1="214" x2="1036" y2="214" stroke="#57606a" stroke-width="2" marker-end="url(#f)"/>
+    <g filter="url(#sombra)"><rect x="1042" y="170" width="200" height="88" rx="14" fill="#eef4ff" stroke="#1a73e8" stroke-width="2"/></g>
+    <text x="1060" y="198" font-size="13" font-weight="700" fill="#1a73e8" letter-spacing="1">GEMINI</text>
+    <text x="1060" y="222" fill="#1f2328" font-weight="700">El modelo</text>
+    <text x="1060" y="244" font-size="13" fill="#57606a">piensa y decide</text>
+
+    <line x1="976" y1="330" x2="1036" y2="330" stroke="#57606a" stroke-width="2" marker-end="url(#f)"/>
+    <g filter="url(#sombra)"><rect x="1042" y="286" width="200" height="88" rx="14" fill="#f6f8fa" stroke="#57606a" stroke-width="2"/></g>
+    <text x="1060" y="314" font-size="13" font-weight="700" fill="#57606a" letter-spacing="1">INE</text>
+    <text x="1060" y="338" fill="#1f2328" font-weight="700">Boletines ENE</text>
+    <text x="1060" y="360" font-size="13" fill="#57606a">los PDF oficiales</text>
+
+    <line x1="976" y1="446" x2="1036" y2="446" stroke="#57606a" stroke-width="2" marker-end="url(#f)"/>
+    <g filter="url(#sombra)"><rect x="1042" y="402" width="200" height="88" rx="14" fill="#fff4e8" stroke="#f38020" stroke-width="2"/></g>
+    <text x="1060" y="430" font-size="13" font-weight="700" fill="#b35400" letter-spacing="1">WORKERS AI</text>
+    <text x="1060" y="454" fill="#1f2328" font-weight="700">PDF → texto</text>
+    <text x="1060" y="476" font-size="13" fill="#57606a">para que el modelo lea</text>
+
+    <line x1="1036" y1="562" x2="976" y2="562" stroke="#57606a" stroke-width="2" marker-end="url(#f)"/>
+    <g filter="url(#sombra)"><rect x="1042" y="518" width="200" height="88" rx="14" fill="#fbefff" stroke="#8250df" stroke-width="2"/></g>
+    <text x="1060" y="546" font-size="13" font-weight="700" fill="#8250df" letter-spacing="1">MCP</text>
+    <text x="1060" y="570" fill="#1f2328" font-weight="700">Otros agentes</text>
+    <text x="1060" y="592" font-size="13" fill="#57606a">usan sus herramientas</text>
+  </g>
+</svg>

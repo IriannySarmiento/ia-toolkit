@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Qué pasa en una corrida del agente</title>
+  <defs>
+    <filter id="sombra" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1f2328" flood-opacity="0.12"/>
+    </filter>
+    <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f38020"/>
+    </marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="640" rx="24" fill="#ffffff"/>
+  <text x="40" y="58" font-size="28" font-weight="700" fill="#1f2328">Qué pasa en una corrida del agente</text>
+  <text x="40" y="88" font-size="17" fill="#57606a">El modelo no ejecuta nada: pide. El programa ejecuta y le devuelve el resultado. Cada vuelta queda escrita en la traza.</text>
+
+  <!-- Disparador -->
+  <rect x="40" y="120" width="170" height="86" rx="14" fill="#f6f8fa" stroke="#57606a" stroke-width="2"/>
+  <text x="125" y="150" font-size="13" font-weight="700" fill="#57606a" text-anchor="middle" letter-spacing="1">DISPARO</text>
+  <text x="125" y="173" font-size="14" fill="#1f2328" text-anchor="middle">botón, /correr</text>
+  <text x="125" y="192" font-size="14" fill="#1f2328" text-anchor="middle">o cron (clase 8)</text>
+  <line x1="214" y1="163" x2="424" y2="163" stroke="#f38020" stroke-width="3" marker-end="url(#f)"/>
+  <text x="318" y="152" font-size="12" fill="#b35400" text-anchor="middle">encargo</text>
+
+  <!-- Ciclo -->
+  <circle cx="540" cy="345" r="172" fill="none" stroke="#f3c79a" stroke-width="3" stroke-dasharray="10 8"/>
+  <text x="540" y="340" font-size="22" font-weight="800" fill="#f38020" text-anchor="middle">EL BUCLE</text>
+  <text x="540" y="362" font-size="13" fill="#57606a" text-anchor="middle">hasta 8 vueltas</text>
+
+  <g filter="url(#sombra)">
+    <rect x="430" y="120" width="220" height="86" rx="14" fill="#fff4e8" stroke="#f38020" stroke-width="2"/>
+    <rect x="620" y="302" width="220" height="86" rx="14" fill="#f38020"/>
+    <rect x="430" y="486" width="220" height="86" rx="14" fill="#fff4e8" stroke="#f38020" stroke-width="2"/>
+    <rect x="240" y="302" width="220" height="86" rx="14" fill="#fff4e8" stroke="#f38020" stroke-width="2"/>
+  </g>
+  <text x="540" y="150" font-size="13" font-weight="700" fill="#b35400" text-anchor="middle">1 · EL MODELO LEE</text>
+  <text x="540" y="172" font-size="14" fill="#1f2328" text-anchor="middle">objetivo + procedimiento</text>
+  <text x="540" y="191" font-size="14" fill="#1f2328" text-anchor="middle">+ encargo + lo ya obtenido</text>
+
+  <text x="730" y="332" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">2 · DECIDE</text>
+  <text x="730" y="354" font-size="14" fill="#ffffff" text-anchor="middle">¿pido una herramienta</text>
+  <text x="730" y="373" font-size="14" fill="#ffffff" text-anchor="middle">o ya puedo entregar?</text>
+
+  <text x="540" y="516" font-size="13" font-weight="700" fill="#b35400" text-anchor="middle">3 · EL PROGRAMA EJECUTA</text>
+  <text x="540" y="538" font-size="14" fill="#1f2328" text-anchor="middle">obtener_ultimo_boletin,</text>
+  <text x="540" y="557" font-size="14" fill="#1f2328" text-anchor="middle">buscar_en_boletines…</text>
+
+  <text x="350" y="332" font-size="13" font-weight="700" fill="#b35400" text-anchor="middle">4 · EL RESULTADO</text>
+  <text x="350" y="354" font-size="14" fill="#1f2328" text-anchor="middle">vuelve al contexto</text>
+  <text x="350" y="373" font-size="14" fill="#1f2328" text-anchor="middle">del modelo</text>
+
+  <path d="M 654 178 C 720 190, 740 240, 740 296" fill="none" stroke="#f38020" stroke-width="3" marker-end="url(#f)"/>
+  <path d="M 720 392 C 712 460, 690 510, 656 522" fill="none" stroke="#f38020" stroke-width="3" marker-end="url(#f)"/>
+  <text x="716" y="476" font-size="13" fill="#b35400">pide herramienta</text>
+  <path d="M 426 522 C 380 512, 350 460, 350 394" fill="none" stroke="#f38020" stroke-width="3" marker-end="url(#f)"/>
+  <path d="M 340 298 C 340 240, 370 200, 426 190" fill="none" stroke="#f38020" stroke-width="3" marker-end="url(#f)"/>
+
+  <!-- Salida -->
+  <line x1="844" y1="345" x2="868" y2="345" stroke="#1a7f37" stroke-width="3" marker-end="url(#g)"/>
+  <text x="858" y="398" font-size="12" fill="#1a7f37" text-anchor="middle">entrega</text>
+
+  <g filter="url(#sombra)">
+    <rect x="874" y="130" width="366" height="76" rx="14" fill="#ffffff" stroke="#1a7f37" stroke-width="2"/>
+    <rect x="874" y="222" width="366" height="76" rx="14" fill="#ffffff" stroke="#1a7f37" stroke-width="2"/>
+    <rect x="874" y="314" width="366" height="76" rx="14" fill="#ffffff" stroke="#1a7f37" stroke-width="2"/>
+    <rect x="874" y="406" width="366" height="76" rx="14" fill="#ffffff" stroke="#1a7f37" stroke-width="2"/>
+    <rect x="874" y="498" width="366" height="76" rx="14" fill="#1a7f37"/>
+  </g>
+  <text x="894" y="162" font-size="15" font-weight="700" fill="#1f2328">entregar_borrador</text>
+  <text x="894" y="186" font-size="13.5" fill="#57606a">titular, bajada, cuerpo, cifras con fuente</text>
+  <text x="894" y="254" font-size="15" font-weight="700" fill="#1f2328">Los límites revisan</text>
+  <text x="894" y="278" font-size="13.5" fill="#57606a">reglas que revisa el programa, no el modelo</text>
+  <text x="894" y="346" font-size="15" font-weight="700" fill="#1f2328">Borrador pendiente</text>
+  <text x="894" y="370" font-size="13.5" fill="#57606a">guardado en la memoria, con su traza</text>
+  <text x="894" y="438" font-size="15" font-weight="700" fill="#1f2328">👤 Una persona aprueba</text>
+  <text x="894" y="462" font-size="13.5" fill="#57606a">con su nombre y la clave del equipo</text>
+  <text x="894" y="530" font-size="15" font-weight="700" fill="#ffffff">Nota publicada</text>
+  <text x="894" y="554" font-size="13.5" fill="#dafbe1">en la portada, con sus fuentes</text>
+  <g stroke="#1a7f37" stroke-width="2.5" marker-end="url(#g)">
+    <line x1="1057" y1="208" x2="1057" y2="218"/>
+    <line x1="1057" y1="300" x2="1057" y2="310"/>
+    <line x1="1057" y1="392" x2="1057" y2="402"/>
+    <line x1="1057" y1="484" x2="1057" y2="494"/>
+  </g>
+</svg>
