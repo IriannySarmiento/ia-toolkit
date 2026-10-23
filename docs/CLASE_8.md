@@ -29,11 +29,11 @@ Verificar: en `/preguntar` (o en el frontend), la traza de `buscar_en_boletines`
 
 ## 3. MCP: prestar las herramientas a otros agentes
 
-El servidor MCP ya está en `https://agente-ene.<subdominio>.workers.dev/mcp` (herramientas `ultima_tasa`,
+El servidor MCP ya está en `https://ia-toolkit.<subdominio>.workers.dev/mcp` (herramientas `ultima_tasa`,
 `buscar_en_boletines`, `estado_del_agente`).
 
 - Para Claude Code (demo del profesor): en `.mcp.json`, agregar
-  `"agente-ene": { "type": "http", "url": "https://agente-ene.<subdominio>.workers.dev/mcp" }` y reiniciar la
+  `"agente-ene": { "type": "http", "url": "https://ia-toolkit.<subdominio>.workers.dev/mcp" }` y reiniciar la
   sesión.
 - Entre equipos: cada equipo anota su URL de MCP en la sección "Mis direcciones" de su README; el otro equipo
   la agrega como servidor en su cliente.

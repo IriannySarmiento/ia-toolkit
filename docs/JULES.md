@@ -45,7 +45,7 @@ Cómo escribir una buena tarea:
 ## 4. Ver el resultado en producción
 
 1. Cloudflare despliega solo al fusionar (1–2 minutos). Lo ves en el Worker → **Deployments**.
-2. Abre `https://agente-ene.<tu-subdominio>.workers.dev/` : la herramienta nueva aparece en `herramientas`.
+2. Abre `https://ia-toolkit.<tu-subdominio>.workers.dev/` : la herramienta nueva aparece en `herramientas`.
 3. Abre `/correr?forzar=1` y busca en la traza `El modelo pidió <nombre>(...)`. Si el modelo no la pidió, el
    problema suele ser la descripción de la herramienta (lo que lee el modelo para decidir), no el código.
 

@@ -12,7 +12,7 @@ a Jules.
 
 ```
   sil7en/ia-toolkit        tu fork            Cloudflare (backend)          tu agente
-  (repositorio maestro) ─▶ tu-usuario/   ─┬─▶ build + deploy ─────────▶ https://agente-ene.<tu-subdominio>.workers.dev
+  (repositorio maestro) ─▶ tu-usuario/   ─┬─▶ build + deploy ─────────▶ https://ia-toolkit.<tu-subdominio>.workers.dev
                            ia-toolkit     │
                            (tu copia)     └─▶ Vercel (frontend) ───────▶ https://<tu-proyecto>.vercel.app
                               ▲
@@ -24,9 +24,9 @@ a Jules.
 | # | Paso | Punto de control: abre esto | Debe verse |
 |---|---|---|---|
 | 1 | **Fork**: en github.com/sil7en/ia-toolkit, botón *Fork* → *Create fork* | `github.com/<tu-usuario>/ia-toolkit` | Tu copia, con las carpetas `backend` y `frontend` |
-| 2 | **Backend en Cloudflare**: crear el Worker desde tu fork (ver [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md)) | `https://agente-ene.<tu-subdominio>.workers.dev/` | `"estado": "en línea"` y `"modelo": "simulado…"` |
+| 2 | **Backend en Cloudflare**: crear el Worker desde tu fork (ver [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md)) | `https://ia-toolkit.<tu-subdominio>.workers.dev/` | `"estado": "en línea"` y `"modelo": "simulado…"` |
 | 3 | **Secretos**: en Cloudflare, Settings → Variables and Secrets: `GEMINI_API_KEY` y `CLAVE_APROBACION` | la misma URL, recargada | `"modelo": "gemini-…"` |
-| 4 | **Primera corrida**: abre `/correr?forzar=1` en el navegador | `https://agente-ene.<tu-subdominio>.workers.dev/correr?forzar=1` | Un borrador con su `traza`: qué pidió el modelo y qué recibió |
+| 4 | **Primera corrida**: abre `/correr?forzar=1` en el navegador | `https://ia-toolkit.<tu-subdominio>.workers.dev/correr?forzar=1` | Un borrador con su `traza`: qué pidió el modelo y qué recibió |
 | 5 | **Frontend en Vercel**: importar tu fork, carpeta `frontend`, variable `NEXT_PUBLIC_API_URL` | `https://<tu-proyecto>.vercel.app` | La portada; *Forzar una corrida*; aprobar en *Borradores*; la nota publicada |
 
 Guía con cada pantalla y cada campo: [docs/PASO_A_PASO.md](docs/PASO_A_PASO.md). Qué es un fork, un commit
@@ -49,7 +49,7 @@ plantilla de issue "Nueva herramienta".
 
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
-| El build de Cloudflare falla con "Worker name … must match" | El nombre del Worker en el panel no es `agente-ene` | Créalo de nuevo con el nombre exacto `agente-ene` |
+| El build de Cloudflare falla con "Worker name … must match" | En *Project name* se escribió otra cosa que `ia-toolkit` | Créalo de nuevo dejando el nombre que propone Cloudflare: `ia-toolkit` |
 | El build de Cloudflare falla en la instalación (`npm ci`, `ERESOLVE` o "lock file") | Se borró o cambió `backend/.npmrc`, o se editó `package.json` a mano | Restaurar `.npmrc` (una línea: `legacy-peer-deps=true`) y deshacer el cambio de `package.json` |
 | `GET /` dice `"modelo": "simulado (sin clave de Gemini)"` | La clave de Gemini no está en el panel | Settings → Variables and Secrets → Add → Secret `GEMINI_API_KEY` → Deploy |
 | Aprobar dice "Clave de aprobación incorrecta" | Falta el secreto `CLAVE_APROBACION` o se escribió distinto | Revisarlo en el panel; se distingue mayúscula de minúscula |
@@ -73,6 +73,6 @@ producción (sección 7 del spec) y se anota aquí.
 
 <!-- Este bloque es tuyo: complétalo después del paso 5. Las actualizaciones del maestro no lo tocan. -->
 
-- Backend: `https://agente-ene.<tu-subdominio>.workers.dev`
+- Backend: `https://ia-toolkit.<tu-subdominio>.workers.dev`
 - Frontend: `https://<tu-proyecto>.vercel.app`
-- MCP: `https://agente-ene.<tu-subdominio>.workers.dev/mcp`
+- MCP: `https://ia-toolkit.<tu-subdominio>.workers.dev/mcp`

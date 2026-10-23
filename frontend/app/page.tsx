@@ -23,7 +23,7 @@ export default function Portada() {
         fase: "error",
         mensaje: API_CONFIGURADA
           ? `No pude hablar con el backend en ${API}. Abre esa dirección en otra pestaña: si no responde, revisa el despliegue en Cloudflare; si responde, revisa que NEXT_PUBLIC_API_URL sea exactamente esa URL, sin barra final.`
-          : "Falta la variable NEXT_PUBLIC_API_URL: el frontend no sabe dónde vive su backend. En Vercel: tu proyecto → Settings → Environment Variables → agrega NEXT_PUBLIC_API_URL con la URL de tu Worker (https://agente-ene.<tu-subdominio>.workers.dev, sin barra final), marca Production y Preview, guarda y luego Deployments → ⋯ → Redeploy.",
+          : "Falta la variable NEXT_PUBLIC_API_URL: el frontend no sabe dónde vive su backend. En Vercel: tu proyecto → Settings → Environment Variables → agrega NEXT_PUBLIC_API_URL con la URL de tu Worker (https://ia-toolkit.<tu-subdominio>.workers.dev, sin barra final), marca Production y Preview, guarda y luego Deployments → ⋯ → Redeploy.",
       });
     }
   }

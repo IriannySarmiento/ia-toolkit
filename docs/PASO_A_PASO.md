@@ -44,7 +44,7 @@ entrega el profesor) y una clave de aprobación inventada por el equipo (una fra
 6. **Subdominio `workers.dev`** ⚠: en una cuenta nueva, Cloudflare asigna o pide registrar un subdominio la
    primera vez. Se ve y se cambia en **Workers & Pages** → **Your subdomain** → **Change**. Usa algo corto y
    reconocible (tu usuario de GitHub, por ejemplo).
-7. Copia la URL que muestra el Worker: `https://agente-ene.<tu-subdominio>.workers.dev`.
+7. Copia la URL que muestra el Worker: `https://ia-toolkit.<tu-subdominio>.workers.dev`.
 8. Punto de control: ábrela. Debe decir `"estado": "en línea"`, `"motor": "propio"` y
    `"modelo": "simulado (sin clave de Gemini)"`. Todavía no hay claves: eso es lo siguiente.
 
@@ -52,7 +52,7 @@ entrega el profesor) y una clave de aprobación inventada por el equipo (una fra
 
 Los secretos se agregan cuando el Worker ya existe (la pantalla de creación no tiene dónde ponerlos).
 
-1. **Workers & Pages** → `agente-ene` → **Settings** → sección **Variables and Secrets** → **Add**.
+1. **Workers & Pages** → `ia-toolkit` → **Settings** → sección **Variables and Secrets** → **Add**.
 2. Tipo **Secret**. **Variable name**: `GEMINI_API_KEY`. **Value**: la clave del equipo.
 3. **Add variable** → Tipo **Secret**. **Variable name**: `CLAVE_APROBACION`. **Value**: la frase del equipo.
 4. **Deploy**. Esto publica una versión nueva del Worker con los secretos; no hace falta otro commit.
@@ -63,7 +63,7 @@ GitHub.
 
 ### 1c. Primera corrida (2 minutos)
 
-1. Abre `https://agente-ene.<tu-subdominio>.workers.dev/correr?forzar=1`. Tarda entre 10 y 40 segundos.
+1. Abre `https://ia-toolkit.<tu-subdominio>.workers.dev/correr?forzar=1`. Tarda entre 10 y 40 segundos.
 2. Punto de control: aparece un borrador con `titulo`, `cifras`, `fuentes` y `traza`. En la traza, busca
    `El modelo pidió obtener_ultimo_boletin({})` y `El modelo entregó con entregar_borrador.`
 

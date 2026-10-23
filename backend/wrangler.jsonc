@@ -3,9 +3,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
 
-  // El nombre del Worker decide la URL pública: https://agente-ene.<subdominio-de-tu-cuenta>.workers.dev
-  // Es el mismo en todos los forks: cada cuenta de Cloudflare tiene su propio subdominio, así que no chocan.
-  "name": "agente-ene",
+  // El nombre del Worker decide la URL pública: https://ia-toolkit.<subdominio-de-tu-cuenta>.workers.dev
+  // Coincide con el "Project name" que Cloudflare propone al importar el fork (el nombre del repo). Si no
+  // coinciden, el build falla. Es el mismo en todos los forks: cada cuenta tiene su propio subdominio.
+  "name": "ia-toolkit",
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],

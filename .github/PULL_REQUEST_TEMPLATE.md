@@ -5,7 +5,7 @@
 ## Cómo verificarlo en producción
 
 <!-- La ruta exacta y qué debe verse. Ejemplo:
-Abrir https://agente-ene.<subdominio>.workers.dev/correr?forzar=1 y buscar en la traza el paso
+Abrir https://ia-toolkit.<subdominio>.workers.dev/correr?forzar=1 y buscar en la traza el paso
 "El modelo pidió calcular_variacion(...)" seguido de su resultado. -->
 
 - Ruta:

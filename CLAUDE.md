@@ -25,7 +25,7 @@ backend usa un modelo simulado que sigue un guion fijo: todo funciona igual, per
 Cada estudiante trabaja en **su fork** de `sil7en/ia-toolkit` en GitHub. El fork está conectado a dos servicios
 que despliegan solos cuando cambia la rama `main`:
 
-- Cloudflare **Workers Builds** (carpeta `backend`) → `https://agente-ene.<subdominio>.workers.dev`
+- Cloudflare **Workers Builds** (carpeta `backend`) → `https://ia-toolkit.<subdominio>.workers.dev`
 - **Vercel** (carpeta `frontend`) → `https://<proyecto>.vercel.app`
 
 Por eso, desplegar = hacer commit en `main` (o fusionar un pull request). Nunca uses `wrangler deploy`,

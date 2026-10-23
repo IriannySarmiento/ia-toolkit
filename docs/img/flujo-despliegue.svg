@@ -87,7 +87,7 @@
   <line x1="922" y1="175" x2="958" y2="175" stroke="#f38020" stroke-width="3" marker-end="url(#flecha-naranja)"/>
   <rect x="966" y="128" width="284" height="96" rx="14" fill="#ffffff" stroke="#f38020" stroke-width="2"/>
   <text x="984" y="156" font-size="13" font-weight="700" fill="#b35400" letter-spacing="1">EL AGENTE (BACKEND)</text>
-  <text x="984" y="184" font-size="15" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" fill="#1f2328">agente-ene.&lt;tu-subdominio&gt;</text>
+  <text x="984" y="184" font-size="15" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" fill="#1f2328">ia-toolkit.&lt;tu-subdominio&gt;</text>
   <text x="984" y="206" font-size="15" font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace" fill="#1f2328">.workers.dev</text>
 
   <line x1="922" y1="425" x2="958" y2="425" stroke="#1f2328" stroke-width="3" marker-end="url(#flecha-negra)"/>

@@ -12,7 +12,7 @@ el backend por HTTP; no tiene claves ni memoria propias.
 | **Root Directory** | `frontend` (botón *Edit* junto al campo) |
 | Framework Preset | Next.js (Vercel lo detecta solo) |
 | Build / Output / Install Command | sin tocar |
-| **Environment Variables** | `NEXT_PUBLIC_API_URL` = la URL de tu backend, **sin barra final**. Ej.: `https://agente-ene.tu-subdominio.workers.dev` |
+| **Environment Variables** | `NEXT_PUBLIC_API_URL` = la URL de tu backend, **sin barra final**. Ej.: `https://ia-toolkit.tu-subdominio.workers.dev` |
 | Entornos de la variable | Production y Preview |
 
 Si la variable falta o está mal escrita, la portada lo dice con el nombre exacto de la variable. Como Next.js
