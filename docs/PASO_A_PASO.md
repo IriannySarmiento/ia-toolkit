@@ -140,6 +140,17 @@ Cuando termine, la tabla se ve como en la primera captura ②: dos filas de tipo
 ✅ **Punto de control:** recarga `https://ia-toolkit.<tu-subdominio>.workers.dev/`. Ahora `"modelo"` dice
 `gemini-…`.
 
+### 2b (opcional) La clave para las vistas previas
+
+Cuando Jules abre un pull request, Cloudflare publica una **vista previa** del agente con ese cambio, para
+probarlo antes de fusionar. Las vistas previas no usan los secretos de producción: sin este paso corren con el
+modelo simulado. Hazlo **antes** de pedirle la primera tarea a Jules (una vista previa ya creada no recibe la
+clave después).
+
+1. En **Settings → Runtime variables and secrets**, aprieta **Previews Base** (al lado de *Production*).
+2. **Add variable** → **Key** `GEMINI_API_KEY`, **Value** tu clave, marca **Secret** → **Add variable and
+   deploy**.
+
 ---
 
 ## 3. Primera corrida del agente
@@ -253,4 +264,9 @@ En tu fork, abre `README.md`, aprieta el lápiz ✎, completa la sección **Mis 
 | `/preguntar` (Gemini) | 6–10 s; la pregunta por una comuna responde "no consta" |
 | Deploy de Vercel | ~40 s. Vercel detecta `backend` (Hono) y `frontend` (Next.js) y propone *Services*; con **Import single project** en `frontend` queda Root Directory `frontend` y preset Next.js solos. Environments viene en *Production and Preview*. |
 | Portada en Vercel → **Forzar una corrida** | 18–20 s, borrador y traza de 5 pasos en pantalla |
+| Aprobar desde **Borradores** con nombre y clave | La nota queda publicada en `/nota` y en la portada |
+| Commit en `main` | Cloudflare (47 s) y Vercel (14 s) redespliegan solos; los secretos se conservan |
+| Jules: issue con plantilla y etiqueta `jules` | Comentario a los 15 s; PR a los ~4 min; CI y Cloudflare en verde |
+| Vista previa del PR (con 2b) | Gemini usa `calcular_variacion` 4 veces en una corrida de 22 s |
+| Sync fork (simulado con git, sin segunda cuenta) | Sin conflictos con ediciones típicas del estudiante |
 | Diferencias con la documentación oficial | El flujo se llama **Create app / Create application** (no "Import a repository"); el directorio raíz se llama **Path** y está dentro de **Advanced settings**; los secretos se agregan después del primer deploy. En Vercel no hay botón **Edit** en Root Directory: se usa **Import single project**. |

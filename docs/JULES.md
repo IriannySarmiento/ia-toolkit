@@ -47,12 +47,32 @@ Cómo escribir una buena tarea:
 
 ## 3. Revisar el pull request
 
-1. Abre el PR. Lee la descripción: qué cambió, cómo verificarlo, qué podría romperse.
+Cuando termina, Jules comenta en el issue *"Ready for a review! A PR has been created."* con el enlace. En el
+ensayo tardó unos 4 minutos.
+
+1. Abre el PR. Lee la descripción: qué cambió y qué archivos tocó.
 2. Pestaña **Files changed**: en verde lo que se agrega, en rojo lo que se quita. Busca el archivo nuevo en
    `backend/src/herramientas/` y la línea nueva en `index.ts`.
-3. Abajo, la marca de **Verificar**: verde = compila el backend y se construye el frontend. Roja = algo no
-   compila: **Details** muestra el error. Pídele a Jules que lo arregle comentando en el PR o en la tarea.
-4. Si todo está bien: **Merge pull request** → **Confirm merge**.
+3. Abajo, las marcas ①: **Backend (tipos)** y **Frontend (build)** (la CI "Verificar"), la vista previa de
+   Vercel y **Workers Builds** de Cloudflare. Todas en verde = compila y se publicó una vista previa. Si alguna
+   está roja, **Details** muestra el error: pídele a Jules que lo arregle comentando en el PR con `@jules`.
+
+![Marcas del PR](img/pasos/jl-02-checks.png)
+
+4. **Pruébalo antes de fusionar.** Cloudflare deja un comentario en el PR con la **Preview URL** (algo como
+   `https://<rama>-ia-toolkit.<tu-subdominio>.workers.dev`). Ábrela con `/correr?forzar=1` al final y busca en la
+   traza `El modelo pidió <nombre>(...)`. La vista previa tiene su propia memoria y no toca tu agente en
+   producción. Para que use Gemini (y no el modelo simulado) hace falta el paso 2b del
+   [paso a paso](PASO_A_PASO.md#2b-opcional-la-clave-para-las-vistas-previas).
+5. Si todo está bien: **Merge pull request** ② → **Confirm merge**.
+
+En el ensayo, la vista previa del PR de `calcular_variacion` mostró a Gemini usando la herramienta cuatro
+veces en una corrida (tasa nacional, femenina, masculina e informalidad):
+
+```
+herramienta: El modelo pidió calcular_variacion({"anterior":"8,6","actual":"9,6"})
+resultado:   calcular_variacion devolvió un objeto con 5 campo(s)
+```
 
 ## 4. Ver el resultado en producción
 
