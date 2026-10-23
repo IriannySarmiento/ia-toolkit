@@ -1,0 +1,23 @@
+{
+  "name": "agente-ene-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Frontend del Agente ENE: la página pública que muestra la nota, permite preguntar y aprobar borradores. Next.js, desplegado en Vercel.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^16.4.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.3"
+  }
+}

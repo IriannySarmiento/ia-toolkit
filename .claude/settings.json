@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run check)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(node configurar.mjs:*)",
+      "Bash(curl:*)",
+      "Bash(npx wrangler whoami)",
+      "Bash(npx vercel whoami)",
+      "Read",
+      "Grep",
+      "Glob"
+    ],
+    "deny": [
+      "Read(./backend/.dev.vars)",
+      "Bash(npx wrangler kv namespace delete:*)",
+      "Bash(npx wrangler delete:*)",
+      "Bash(npx vercel remove:*)",
+      "Bash(npx vercel rm:*)"
+    ]
+  }
+}

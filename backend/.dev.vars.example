@@ -1,0 +1,9 @@
+# Copiar este archivo como .dev.vars (sin .example) y completar.
+# .dev.vars NUNCA se comparte ni se sube a ningún lado: son los secretos del equipo.
+# Para subirlos a producción: npx wrangler secret bulk .dev.vars
+
+# Clave de la API de Gemini (la entrega el profesor). Si falta, el agente corre en modo simulado.
+GEMINI_API_KEY=
+
+# Clave que se exige para aprobar o rechazar borradores desde el frontend. Inventen una frase.
+CLAVE_APROBACION=cambiar-esta-clave

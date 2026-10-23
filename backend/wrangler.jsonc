@@ -1,0 +1,40 @@
+// Configuración del backend del Agente ENE en Cloudflare Workers.
+// Cada línea comentada explica qué pieza del agente activa.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // El nombre del Worker decide la URL pública: https://agente-ene-<equipo>.<subdominio>.workers.dev
+  // El script `node configurar.mjs <letra>` cambia "equipo" por la letra del equipo (a, b, c, d).
+  "name": "agente-ene-equipo",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+
+  // Logs en el panel de Cloudflare (Workers → Logs). Sirven para leer qué hizo el agente.
+  "observability": { "enabled": true },
+
+  // Permite importar archivos .md como texto: así objetivo.md y las skills son archivos que se editan a mano.
+  "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
+
+  // MEMORIA: la memoria del agente (qué boletín ya vio, borradores, nota publicada).
+  // El id lo crea la puesta a punto con: npx wrangler kv namespace create MEMORIA
+  "kv_namespaces": [{ "binding": "MEMORIA", "id": "pendiente-de-crear" }],
+
+  // AI: Workers AI. Se usa para convertir el PDF del INE a texto (toMarkdown). No cuesta nada para PDF.
+  "ai": { "binding": "AI" },
+
+  // Variables no secretas (las secretas van en .dev.vars y se suben con `wrangler secret bulk`).
+  "vars": {
+    "NOMBRE_EQUIPO": "Equipo sin configurar",
+    "GEMINI_MODELOS": "gemini-3.6-flash,gemini-3.5-flash,gemini-flash-latest",
+    "MAX_PASOS": "8"
+  }
+
+  // ── Clase 8: el disparador. Descomentar (y agregar una coma al final del bloque "vars") para que el agente
+  //    corra solo todos los días a las 09:30 de Chile (12:30 UTC).
+  // "triggers": { "crons": ["30 12 * * *"] },
+
+  // ── Clase 8: el RAG en producción. Descomentar cuando exista la instancia de AI Search en el panel.
+  // "ai_search": [{ "binding": "CORPUS", "instance_name": "boletines-ene" }]
+}
