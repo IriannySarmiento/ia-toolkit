@@ -1,47 +1,51 @@
-// La memoria del agente vive en KV (clave → valor). Sin memoria, cada corrida empezaría de cero
-// y el agente publicaría el mismo boletín todos los días.
+// La memoria del agente vive en un Durable Object (ver ../memoria-durable.ts). Sin memoria, cada corrida
+// empezaría de cero y el agente publicaría el mismo boletín todos los días.
+// Estas funciones son la única puerta a la memoria: el bucle, las rutas y el MCP usan solo estas.
 import type { Borrador, Env, Herramienta } from "../tipos";
+import type { EntradaIndice } from "../memoria-durable";
 
-const CLAVE_ULTIMO = "ultimo_boletin_visto";
-const CLAVE_INDICE = "borradores:indice";
-const CLAVE_PUBLICADA = "nota_publicada";
+export type { EntradaIndice };
 
-export interface EntradaIndice {
-  id: string; creado: string; titulo: string; estado: Borrador["estado"]; motivo: Borrador["motivo"]; boletin?: number; problemas: number;
+/** Hay un solo objeto de memoria por Worker, siempre con el mismo nombre. */
+function memoria(env: Env) {
+  return env.MEMORIA.get(env.MEMORIA.idFromName("memoria"));
 }
 
 export async function leerUltimoBoletinVisto(env: Env): Promise<number | null> {
-  const v = await env.MEMORIA.get(CLAVE_ULTIMO);
-  return v ? Number(v) : null;
+  return memoria(env).leerUltimoBoletinVisto();
 }
 
 export async function anotarBoletinVisto(env: Env, numero: number): Promise<void> {
-  const actual = await leerUltimoBoletinVisto(env);
-  if (actual === null || numero > actual) await env.MEMORIA.put(CLAVE_ULTIMO, String(numero));
+  await memoria(env).anotarBoletinVisto(numero);
 }
 
 export async function guardarBorrador(env: Env, b: Borrador): Promise<void> {
-  await env.MEMORIA.put(`borrador:${b.id}`, JSON.stringify(b));
-  const indice = await listarBorradores(env);
-  const entrada: EntradaIndice = { id: b.id, creado: b.creado, titulo: b.titulo, estado: b.estado, motivo: b.motivo, boletin: b.boletin, problemas: b.problemas.length };
-  const nuevo = [entrada, ...indice.filter((e) => e.id !== b.id)].slice(0, 30);
-  await env.MEMORIA.put(CLAVE_INDICE, JSON.stringify(nuevo));
+  await memoria(env).guardarBorrador(b);
 }
 
 export async function listarBorradores(env: Env): Promise<EntradaIndice[]> {
-  return (await env.MEMORIA.get<EntradaIndice[]>(CLAVE_INDICE, "json")) ?? [];
+  return memoria(env).listarBorradores();
 }
 
 export async function leerBorrador(env: Env, id: string): Promise<Borrador | null> {
-  return env.MEMORIA.get<Borrador>(`borrador:${id}`, "json");
+  return memoria(env).leerBorrador(id);
 }
 
 export async function publicarNota(env: Env, b: Borrador): Promise<void> {
-  await env.MEMORIA.put(CLAVE_PUBLICADA, JSON.stringify(b));
+  await memoria(env).publicarNota(b);
 }
 
 export async function leerNotaPublicada(env: Env): Promise<Borrador | null> {
-  return env.MEMORIA.get<Borrador>(CLAVE_PUBLICADA, "json");
+  return memoria(env).leerNotaPublicada();
+}
+
+/** El candado de /correr: si 24 personas aprietan el botón a la vez, corre una sola vez. */
+export async function tomarCandado(env: Env, ttlSegundos: number): Promise<boolean> {
+  return memoria(env).tomarCandado(ttlSegundos);
+}
+
+export async function soltarCandado(env: Env): Promise<void> {
+  await memoria(env).soltarCandado();
 }
 
 /** Herramienta de solo lectura: el modelo puede preguntar qué recuerda el agente. */

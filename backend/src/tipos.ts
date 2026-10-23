@@ -1,8 +1,9 @@
 // Tipos compartidos por todo el backend. Leer este archivo es leer el vocabulario del agente.
+import type { Memoria } from "./memoria-durable";
 
 /** Lo que Cloudflare le entrega al Worker en cada ejecución: memoria, IA, secretos y variables. */
 export interface Env {
-  MEMORIA: KVNamespace;            // la memoria del agente (clave → valor)
+  MEMORIA: DurableObjectNamespace<Memoria>; // la memoria del agente (Durable Object con SQLite)
   AI: Ai;                          // Workers AI: convierte el PDF del INE a texto
   CORPUS?: AiSearchBinding;        // clase 8: el RAG gestionado (AI Search). Si no existe, se usa el corpus local
   GEMINI_API_KEY?: string;         // secreto
@@ -10,6 +11,7 @@ export interface Env {
   NOMBRE_EQUIPO?: string;
   GEMINI_MODELOS?: string;         // lista separada por comas, en orden de preferencia
   MAX_PASOS?: string;
+  MOTOR?: string;                  // "propio" (el bucle de bucle.ts) o "adk" (Google ADK, motor-adk.ts)
 }
 
 /** Forma mínima del binding de AI Search que usamos (search devuelve trozos con puntaje y origen). */

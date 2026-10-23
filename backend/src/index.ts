@@ -4,10 +4,13 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { createMcpHandler } from "agents/mcp/server";
 import type { Env } from "./tipos";
-import { correrAgente, responderPregunta } from "./agente/bucle";
+import { correrAgente, motorActivo, responderPregunta } from "./agente/bucle";
 import { herramientas } from "./herramientas";
-import { leerBorrador, leerNotaPublicada, leerUltimoBoletinVisto, listarBorradores, guardarBorrador, publicarNota } from "./herramientas/memoria";
+import { leerBorrador, leerNotaPublicada, leerUltimoBoletinVisto, listarBorradores, guardarBorrador, publicarNota, soltarCandado, tomarCandado } from "./herramientas/memoria";
 import { crearServidorMcp } from "./mcp";
+
+// La clase de la memoria (Durable Object) tiene que exportarse desde aquí para que Cloudflare la encuentre.
+export { Memoria } from "./memoria-durable";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -21,11 +24,13 @@ app.get("/", async (c) => {
     nombre: "Agente ENE",
     equipo: c.env.NOMBRE_EQUIPO ?? null,
     estado: "en línea",
+    motor: motorActivo(c.env),
     modelo: c.env.GEMINI_API_KEY ? (c.env.GEMINI_MODELOS ?? "gemini").split(",")[0] : "simulado (sin clave de Gemini)",
     ultimoBoletinVisto: visto,
     herramientas: herramientas.map((h) => ({ nombre: h.nombre, descripcion: h.descripcion })),
     rutas: {
       "GET /": "este inventario",
+      "GET /correr": "dispara una corrida desde el navegador. Opcional: ?forzar=1&boletin=335",
       "POST /correr": "dispara una corrida del agente. Cuerpo opcional: { forzar: true, boletin: 335 }",
       "GET /borradores": "lista de borradores",
       "GET /borradores/:id": "un borrador con su traza",
@@ -38,18 +43,29 @@ app.get("/", async (c) => {
   });
 });
 
-/** Disparo manual: una persona aprieta el botón. */
+/** Disparo manual: una persona aprieta el botón (POST) o abre la URL en el navegador (GET). */
+async function correr(env: Env, op: { forzar: boolean; boletin?: number }) {
+  // Un candado simple: si 24 personas aprietan el botón a la vez, corre una sola vez.
+  if (!(await tomarCandado(env, 90))) return { codigo: 409 as const, cuerpo: { error: "Ya hay una corrida en curso. Espera unos segundos y mira /borradores." } };
+  try {
+    return { codigo: 200 as const, cuerpo: await correrAgente(env, { motivo: "manual", ...op }) };
+  } finally {
+    await soltarCandado(env);
+  }
+}
+
 app.post("/correr", async (c) => {
   const cuerpo = (await c.req.json().catch(() => ({}))) as { forzar?: boolean; boletin?: number };
-  // Un candado simple: si 24 personas aprietan el botón a la vez, corre una sola vez.
-  if (await c.env.MEMORIA.get("corrida:en_curso")) return c.json({ error: "Ya hay una corrida en curso. Espera unos segundos y mira /borradores." }, 409);
-  await c.env.MEMORIA.put("corrida:en_curso", new Date().toISOString(), { expirationTtl: 90 });
-  try {
-    const r = await correrAgente(c.env, { motivo: "manual", forzar: Boolean(cuerpo.forzar), boletin: cuerpo.boletin ? Number(cuerpo.boletin) : undefined });
-    return c.json(r);
-  } finally {
-    await c.env.MEMORIA.delete("corrida:en_curso");
-  }
+  const r = await correr(c.env, { forzar: Boolean(cuerpo.forzar), boletin: cuerpo.boletin ? Number(cuerpo.boletin) : undefined });
+  return c.json(r.cuerpo, r.codigo);
+});
+
+// Para el primer punto de control de la clase: abrir <URL>/correr?forzar=1 en el navegador y leer la traza.
+app.get("/correr", async (c) => {
+  const forzar = ["1", "true", "si", "sí"].includes((c.req.query("forzar") ?? "").toLowerCase());
+  const boletin = Number(c.req.query("boletin")) || undefined;
+  const r = await correr(c.env, { forzar, boletin });
+  return c.json(r.cuerpo, r.codigo);
 });
 
 app.get("/borradores", async (c) => c.json(await listarBorradores(c.env)));

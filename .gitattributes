@@ -1,0 +1,2 @@
+# Fin de línea LF en todo el repo (los builds de Cloudflare, Vercel y Jules corren en Linux).
+* text=auto eol=lf

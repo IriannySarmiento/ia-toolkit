@@ -3,9 +3,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
 
-  // El nombre del Worker decide la URL pública: https://agente-ene-<equipo>.<subdominio>.workers.dev
-  // El script `node configurar.mjs <letra>` cambia "equipo" por la letra del equipo (a, b, c, d).
-  "name": "agente-ene-equipo",
+  // El nombre del Worker decide la URL pública: https://agente-ene.<subdominio-de-tu-cuenta>.workers.dev
+  // Es el mismo en todos los forks: cada cuenta de Cloudflare tiene su propio subdominio, así que no chocan.
+  "name": "agente-ene",
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -18,17 +18,27 @@
   "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
 
   // MEMORIA: la memoria del agente (qué boletín ya vio, borradores, nota publicada).
-  // El id lo crea la puesta a punto con: npx wrangler kv namespace create MEMORIA
-  "kv_namespaces": [{ "binding": "MEMORIA", "id": "pendiente-de-crear" }],
+  // Es un Durable Object con SQLite (la clase Memoria de src/memoria-durable.ts). Cloudflare la crea sola
+  // en el primer despliegue: no hay ningún id que copiar.
+  "durable_objects": { "bindings": [{ "name": "MEMORIA", "class_name": "Memoria" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Memoria"] }],
 
   // AI: Workers AI. Se usa para convertir el PDF del INE a texto (toMarkdown). No cuesta nada para PDF.
   "ai": { "binding": "AI" },
 
-  // Variables no secretas (las secretas van en .dev.vars y se suben con `wrangler secret bulk`).
+  // Variables no secretas. Las secretas (GEMINI_API_KEY, CLAVE_APROBACION) NO van aquí: se escriben en el
+  // panel de Cloudflare (Settings → Variables and Secrets → Secret) antes del primer despliegue.
   "vars": {
-    "NOMBRE_EQUIPO": "Equipo sin configurar",
+    // El nombre de tu equipo. Cámbialo aquí mismo en GitHub (lápiz → Commit changes) y el Worker se
+    // vuelve a desplegar solo.
+    "NOMBRE_EQUIPO": "Mi equipo",
+    // Modelos de Gemini en orden de preferencia. El motor "propio" prueba el siguiente si uno no responde;
+    // el motor "adk" usa solo el primero.
     "GEMINI_MODELOS": "gemini-3.6-flash,gemini-3.5-flash,gemini-flash-latest",
-    "MAX_PASOS": "8"
+    // Cuántas veces puede el modelo pedir algo antes de que el programa corte la corrida.
+    "MAX_PASOS": "8",
+    // Qué motor corre el bucle: "propio" (src/agente/bucle.ts) o "adk" (Google ADK, src/agente/motor-adk.ts).
+    "MOTOR": "propio"
   }
 
   // ── Clase 8: el disparador. Descomentar (y agregar una coma al final del bloque "vars") para que el agente

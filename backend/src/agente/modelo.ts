@@ -56,7 +56,7 @@ export async function llamarModelo(env: Env, p: Peticion): Promise<Respuesta> {
 }
 
 /** Guion fijo: 1) pide el último boletín; 2) entrega un borrador con lo que recibió. */
-function modeloSimulado(p: Peticion): Respuesta {
+export function modeloSimulado(p: Peticion): Respuesta {
   const h = p.contenidos;
   const nombres = p.herramientas.map((d) => d.name);
   const respuestas = h.flatMap((c) => c.parts).filter((x): x is ParteRespuesta => "functionResponse" in x);

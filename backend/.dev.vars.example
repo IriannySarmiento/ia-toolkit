@@ -1,6 +1,7 @@
-# Copiar este archivo como .dev.vars (sin .example) y completar.
+# Solo para probar en local (npx wrangler dev). Copiar este archivo como .dev.vars (sin .example) y completar.
 # .dev.vars NUNCA se comparte ni se sube a ningún lado: son los secretos del equipo.
-# Para subirlos a producción: npx wrangler secret bulk .dev.vars
+# En producción los secretos NO salen de aquí: se escriben en el panel de Cloudflare
+# (Workers & Pages → agente-ene → Settings → Variables and Secrets → Add → tipo Secret).
 
 # Clave de la API de Gemini (la entrega el profesor). Si falta, el agente corre en modo simulado.
 GEMINI_API_KEY=

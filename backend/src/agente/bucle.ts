@@ -4,6 +4,9 @@
 //   3. el programa ejecuta la herramienta y pone el resultado en el contexto;
 //   4. vuelve al paso 2, hasta que el modelo entrega el resultado o se acaban los pasos.
 // El humano no está dentro del bucle: lo dispara (botón o cron) y revisa el resultado después.
+// Hay dos motores para el mismo bucle, y se elige con la variable MOTOR de wrangler.jsonc:
+//   "propio" → este archivo (30 líneas que se pueden leer enteras);
+//   "adk"    → el Agent Development Kit de Google (motor-adk.ts), con las mismas herramientas y la misma traza.
 import objetivo from "./objetivo.md";
 import procedimiento from "./skills/respuesta-ene.md";
 import type { Borrador, Cifra, Env, Herramienta, PasoTraza } from "../tipos";
@@ -50,10 +53,22 @@ export interface ResultadoBucle {
   traza: PasoTraza[];
   modelo: string;
   tokens: number;
+  error?: string;                                              // si el motor falló (modelo caído, clave inválida…)
+}
+
+export interface ConfigBucle { instrucciones: string; encargo: string; lista: Herramienta[]; terminales: Declaracion[]; maxPasos: number }
+
+/** Qué motor corre el bucle según la variable MOTOR. Cualquier otro valor (o ninguno) es "propio". */
+export function motorActivo(env: Env): "propio" | "adk" {
+  return (env.MOTOR ?? "").trim().toLowerCase() === "adk" ? "adk" : "propio";
 }
 
 /** Corre el bucle genérico. Lo usan tanto la corrida del agente como las preguntas de los lectores. */
-export async function ejecutarBucle(env: Env, cfg: { instrucciones: string; encargo: string; lista: Herramienta[]; terminales: Declaracion[]; maxPasos: number }): Promise<ResultadoBucle> {
+export async function ejecutarBucle(env: Env, cfg: ConfigBucle): Promise<ResultadoBucle> {
+  if (motorActivo(env) === "adk") {
+    const { ejecutarBucleAdk } = await import("./motor-adk");   // se carga solo si se usa
+    return ejecutarBucleAdk(env, cfg);
+  }
   const traza: PasoTraza[] = [];
   const ctx = { env, traza };
   const t0 = Date.now();
@@ -154,6 +169,7 @@ export async function correrAgente(env: Env, op: OpcionesCorrida): Promise<Borra
   };
   borrador.problemas = revisarLimites(borrador);
   if (!r.final) borrador.problemas.unshift("La corrida terminó sin entregar un borrador con la herramienta correspondiente.");
+  if (r.error) borrador.problemas.unshift(`El motor del agente falló: ${r.error}`);
   borrador.traza.push({ n: borrador.traza.length + 1, tipo: "limite", detalle: borrador.problemas.length ? `Los límites encontraron ${borrador.problemas.length} problema(s).` : "Los límites no encontraron problemas." });
   await guardarBorrador(env, borrador);
   if (borrador.boletin) await anotarBoletinVisto(env, borrador.boletin);
@@ -173,7 +189,7 @@ export async function responderPregunta(env: Env, pregunta: string) {
   const a = r.final?.args ?? {};
   return {
     pregunta,
-    respuesta: String(a.respuesta ?? r.textoLibre ?? "No pude responder en los pasos permitidos."),
+    respuesta: String(a.respuesta ?? r.textoLibre ?? (r.error ? `No pude responder: el motor del agente falló (${r.error}).` : "No pude responder en los pasos permitidos.")),
     fuentes: Array.isArray(a.fuentes) ? (a.fuentes as unknown[]).map(String) : [],
     modelo: r.modelo,
     traza: r.traza,
@@ -189,7 +205,7 @@ function numeroBoletinDesde(traza: PasoTraza[]): number | undefined {
   return undefined;
 }
 
-function recortar(v: unknown): unknown {
+export function recortar(v: unknown): unknown {
   // Los textos largos (el boletín entero) se recortan en la traza y en lo que vuelve al modelo.
   if (v && typeof v === "object" && !Array.isArray(v)) {
     const o = { ...(v as Record<string, unknown>) };
@@ -199,7 +215,7 @@ function recortar(v: unknown): unknown {
   return v;
 }
 
-function resumen(v: unknown): string {
+export function resumen(v: unknown): string {
   if (v && typeof v === "object") {
     const o = v as Record<string, unknown>;
     if ("numero" in o) return `el boletín ${o.numero} (${o.origen ?? ""}; tasa ${o.tasa ?? "no extraída"})`;
