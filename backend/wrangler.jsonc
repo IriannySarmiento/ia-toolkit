@@ -29,8 +29,22 @@
   // AI: Workers AI. Se usa para convertir el PDF del INE a texto (toMarkdown). No cuesta nada para PDF.
   "ai": { "binding": "AI" },
 
+  // VISTAS PREVIAS: cada rama que no es main (por ejemplo, el pull request de Jules) se publica aparte, con su
+  // propia URL y su propia memoria vacía, sin tocar producción. Cloudflare exige repetir aquí lo que el agente
+  // usa; si falta este bloque, el build de la vista previa falla. No hace falta editarlo.
+  "previews": {
+    "durable_objects": { "bindings": [{ "name": "MEMORIA", "class_name": "Memoria" }] },
+    "ai": { "binding": "AI" },
+    "vars": {
+      "NOMBRE_EQUIPO": "Vista previa",
+      "GEMINI_MODELOS": "gemini-3.6-flash,gemini-3.5-flash,gemini-flash-latest",
+      "MAX_PASOS": "8",
+      "MOTOR": "propio"
+    }
+  },
+
   // Variables no secretas. Las secretas (GEMINI_API_KEY, CLAVE_APROBACION) NO van aquí: se escriben en el
-  // panel de Cloudflare (Settings → Variables and Secrets → Secret) antes del primer despliegue.
+  // panel de Cloudflare (Settings → Runtime variables and secrets → Add variable → Secret).
   "vars": {
     // El nombre de tu equipo. Cámbialo aquí mismo en GitHub (lápiz → Commit changes) y el Worker se
     // vuelve a desplegar solo.

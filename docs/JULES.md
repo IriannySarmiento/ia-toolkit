@@ -7,19 +7,31 @@ gratuito permite **15 tareas por día** (y 3 a la vez). Fuente: jules.google/doc
 ## 1. Conectar Jules a tu fork (una vez)
 
 1. Entra a **jules.google** con tu Gmail institucional y acepta el aviso de privacidad.
-2. **Connect to GitHub account** → en GitHub, elige **Only select repositories** → tu `ia-toolkit` →
-   autoriza. Solo tu fork: Jules no necesita ver nada más.
-3. Si después quieres cambiar el acceso: GitHub → tu foto → **Settings** → **Applications** →
+2. En la portada aparece **Import your repos · Connect to GitHub**: apriétalo → en GitHub, elige **Only select
+   repositories** → tu `ia-toolkit` → autoriza. Solo tu fork: Jules no necesita ver nada más.
+3. Punto de control: en jules.google, arriba, aparece `<tu-usuario> / ia-toolkit`.
+
+> ⚠ Conecta Jules **antes** de crear el primer issue. Si creas el issue con la etiqueta `jules` y después
+> conectas Jules, la tarea no se dispara: en el issue, quita la etiqueta `jules` y vuelve a ponerla (engranaje
+> de **Labels**).
+4. Si después quieres cambiar el acceso: GitHub → tu foto → **Settings** → **Applications** →
    **Google Labs Jules** → **Configure** → **Repository access**.
-4. Opcional (la primera vez): en Jules, abre tu repositorio → **Configuration** → en *Initial Setup* escribe
+5. Opcional (la primera vez): en Jules, abre tu repositorio → **Configuration** → en *Initial Setup* escribe
    `cd backend && npm ci && cd ../frontend && npm ci` → **Run and Snapshot**. Así cada tarea parte con las
    dependencias instaladas. Jules también lee `AGENTS.md`, que le explica el proyecto.
 
 ## 2. Pedir una tarea
 
 **Desde GitHub (recomendado):** en tu fork → **Issues** → **New issue** → elige la plantilla **Nueva
-herramienta** o **Nueva regla del objetivo** → completa los campos → **Create**. La plantilla ya pone la
-etiqueta `jules`: Jules comenta en el issue que tomó la tarea y, al terminar, deja el enlace al pull request.
+herramienta** o **Nueva regla del objetivo**.
+
+![Plantilla de issue](img/pasos/jl-01-plantilla.png)
+
+La plantilla elegida aparece arriba ①, y ya trae las etiquetas **herramienta** y **jules** ②. Completa el
+título ③ (después de "Herramienta:") y todos los campos, y aprieta **Create**. En el ensayo, a los 15 segundos
+apareció en el issue el comentario de `google-labs-jules[bot]`: *"Jules is on it… When finished, you will see
+another comment and be able to review a PR."* El enlace *on it* abre la tarea en jules.google, donde se ve qué
+está haciendo y cuántas tareas te quedan en el día (*Daily session limit (1/15)*).
 
 **Desde jules.google:** botón **+** → elige tu repositorio y la rama `main` → escribe la tarea → **Give me a
 plan** → revisa el plan y apruébalo. Al terminar, Jules publica una rama; desde GitHub abres el pull request
