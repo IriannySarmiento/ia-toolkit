@@ -1,7 +1,0 @@
-{
-  "equipo": "sin configurar",
-  "backend_url": "",
-  "frontend_url": "",
-  "mcp_url": "",
-  "nota": "Lo llena node configurar.mjs y luego la puesta a punto. Las URLs son las de producción."
-}

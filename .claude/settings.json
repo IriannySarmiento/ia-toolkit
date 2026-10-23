@@ -1,23 +1,28 @@
 {
   "permissions": {
     "allow": [
+      "Bash(npm ci)",
       "Bash(npm install)",
       "Bash(npm run check)",
+      "Bash(npm run build)",
       "Bash(npx tsc --noEmit)",
-      "Bash(node configurar.mjs:*)",
+      "Bash(npx wrangler deploy --dry-run:*)",
       "Bash(curl:*)",
-      "Bash(npx wrangler whoami)",
-      "Bash(npx vercel whoami)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
       "Read",
       "Grep",
       "Glob"
     ],
     "deny": [
       "Read(./backend/.dev.vars)",
-      "Bash(npx wrangler kv namespace delete:*)",
+      "Read(./frontend/.env.local)",
       "Bash(npx wrangler delete:*)",
+      "Bash(npx wrangler secret:*)",
       "Bash(npx vercel remove:*)",
-      "Bash(npx vercel rm:*)"
+      "Bash(npx vercel rm:*)",
+      "Bash(git push --force:*)"
     ]
   }
 }

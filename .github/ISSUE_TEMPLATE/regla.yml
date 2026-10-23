@@ -1,0 +1,32 @@
+name: Nueva regla del objetivo
+description: Propón una regla para el objetivo del agente (backend/src/agente/objetivo.md) y cómo se medirá su efecto.
+title: "Regla: "
+labels: ["jules", "regla"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Una regla, un efecto medible. Jules la agregará en el bloque "Lo que el equipo editorial quiere cambiar"
+        de `objetivo.md` y abrirá un pull request. Nunca escribas claves ni contraseñas aquí.
+  - type: textarea
+    id: regla
+    attributes:
+      label: La regla
+      description: Tal como debería leerla el agente.
+      placeholder: Cuando la tasa suba, el titular debe decir cuántos puntos porcentuales subió.
+    validations:
+      required: true
+  - type: textarea
+    id: efecto
+    attributes:
+      label: Efecto medible esperado
+      description: Qué debería cambiar en el próximo borrador, de forma que se pueda comprobar.
+      placeholder: El titular del próximo borrador forzado incluye "pp.".
+    validations:
+      required: true
+  - type: input
+    id: referencia
+    attributes:
+      label: Borrador de referencia (id)
+      description: El borrador actual con el que se compara. Está en /borradores.
+      placeholder: mvk8gsf6-tw8u

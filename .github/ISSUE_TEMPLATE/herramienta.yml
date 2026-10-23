@@ -1,0 +1,58 @@
+name: Nueva herramienta
+description: Pídele a Jules que le agregue una herramienta al agente (algo que el modelo puede pedir y el programa ejecuta).
+title: "Herramienta: "
+labels: ["jules", "herramienta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Escribe en lenguaje de redacción, sin código. Una herramienta por tarea.
+        La etiqueta `jules` hace que Jules tome la tarea y responda con un pull request.
+        Nunca escribas claves ni contraseñas aquí: este repositorio es público.
+  - type: input
+    id: nombre
+    attributes:
+      label: Nombre propuesto
+      description: En minúsculas y con guiones bajos.
+      placeholder: calcular_variacion
+    validations:
+      required: true
+  - type: input
+    id: que_hace
+    attributes:
+      label: Qué debe hacer (una frase)
+      placeholder: Calcula la diferencia entre dos tasas en puntos porcentuales y la variación relativa.
+    validations:
+      required: true
+  - type: textarea
+    id: recibe
+    attributes:
+      label: Qué recibe
+      description: Cada dato que necesita, con un ejemplo.
+      placeholder: |
+        - actual: la tasa más reciente, por ejemplo 9,6
+        - anterior: la tasa con la que se compara, por ejemplo 8,6
+    validations:
+      required: true
+  - type: textarea
+    id: devuelve
+    attributes:
+      label: Qué devuelve
+      placeholder: La diferencia en pp. (1,0) y la variación relativa (11,6%), con una frase que lo explique.
+    validations:
+      required: true
+  - type: textarea
+    id: cuando
+    attributes:
+      label: Cuándo debería usarla el agente
+      description: Esto se convierte en la descripción que lee el modelo para decidir.
+      placeholder: Siempre que el borrador compare la tasa del boletín con la de hace un año.
+    validations:
+      required: true
+  - type: textarea
+    id: verificar
+    attributes:
+      label: Cómo verificarlo en la traza
+      placeholder: Abrir <backend>/correr?forzar=1 y buscar el paso "El modelo pidió calcular_variacion(...)".
+    validations:
+      required: true
