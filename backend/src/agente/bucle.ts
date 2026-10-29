@@ -181,7 +181,7 @@ export async function correrAgente(env: Env, op: OpcionesCorrida): Promise<Borra
 export async function responderPregunta(env: Env, pregunta: string) {
   const lista = herramientas.filter((h) => ["buscar_en_boletines", "consultar_memoria", "tasa_por_region"].includes(h.nombre));
   const r = await ejecutarBucle(env, {
-    instrucciones: `${objetivo}\n\n# Modo pregunta\nAhora no redactas una nota: respondes la pregunta de un lector usando SOLO lo que devuelvan buscar_en_boletines (texto de los boletines) y tasa_por_region (cifras por región). Cita la fuente de cada cifra. Si no consta, dilo y explica qué sí se puede saber. Máximo 120 palabras. Entrega con la herramienta responder.\n\n${procedimientoRegiones}`,
+    instrucciones: `${objetivo}\n\n# Modo pregunta\nAhora no redactas una nota: respondes la pregunta de un lector usando SOLO lo que devuelvan buscar_en_boletines (texto de los boletines) y tasa_por_region (cifras por región). Cita la fuente de cada cifra. Si no consta, dilo y explica qué sí se puede saber. Máximo 120 palabras, en texto plano (sin asteriscos ni otros símbolos de formato). Entrega con la herramienta responder.\n\n${procedimientoRegiones}`,
     encargo: pregunta,
     lista,
     terminales: [RESPONDER],

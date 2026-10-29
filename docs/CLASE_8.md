@@ -160,3 +160,4 @@ la tasa más alta?" no se responde buscando texto: se responde con la tabla.
 | 28-10-2026 | `/preguntar` "Ñuble", "santiago", "comuna de Puente Alto" | 7–9 s; `tasa_por_region` con "Ñuble", "RM" y "Región Metropolitana"; las dos últimas aclaran que la ENE no entrega comunas y ofrecen la RM |
 | 28-10-2026 | `/evaluar` | local 0,9 s; vector 3,6 s (18 vectores en una llamada, 1 consulta a Neon). Ver resultado abajo |
 | 28-10-2026 | `/exportar.csv` | BOM UTF-8, 44 filas (borradores + 16 regiones) |
+| 28-10-2026 | Neon dormido (6,7 min sin uso) | primera consulta 1,8 s (contra 0,8 s despierto); sin error. Basta con decirlo en clase |
