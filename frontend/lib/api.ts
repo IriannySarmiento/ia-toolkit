@@ -37,7 +37,7 @@ export const api = {
   correr: (cuerpo: { forzar?: boolean; boletin?: number } = {}) => pedir<Borrador | { sinNovedad: true; motivo: string; traza: Paso[] } | { error: string }>("/correr", { method: "POST", body: JSON.stringify(cuerpo) }),
   decidir: (accion: "aprobar" | "rechazar", id: string, nombre: string, clave: string) =>
     pedir<{ ok?: boolean; error?: string }>(`/${accion}`, { method: "POST", body: JSON.stringify({ id, nombre }), headers: { "x-clave": clave } }),
-  preguntar: (pregunta: string) => pedir<{ respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | null; traza: Paso[] } | { error: string }>("/preguntar", { method: "POST", body: JSON.stringify({ pregunta }) }),
+  preguntar: (pregunta: string) => pedir<{ respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | "tabla" | null; traza: Paso[] } | { error: string }>("/preguntar", { method: "POST", body: JSON.stringify({ pregunta }) }),
   regiones: () => pedir<Regiones | { error: string }>("/regiones"),
 };
 

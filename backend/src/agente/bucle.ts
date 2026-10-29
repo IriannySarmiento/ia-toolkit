@@ -198,13 +198,16 @@ export async function responderPregunta(env: Env, pregunta: string) {
   };
 }
 
-/** Cómo buscó el agente en esta corrida: "vector" (por significado), "local" (por palabras) o null (no buscó). */
-function viaDeBusqueda(traza: PasoTraza[]): "vector" | "local" | null {
+/** Cómo buscó el agente: "vector" (por significado), "local" (por palabras), "tabla" (cifra regional exacta) o null. */
+function viaDeBusqueda(traza: PasoTraza[]): "vector" | "local" | "tabla" | null {
+  let tabla = false;
   for (const p of traza) {
-    const d = p.datos as Array<{ via?: string }> | undefined;
-    if (p.tipo === "resultado" && Array.isArray(d) && d[0]?.via) return d[0].via === "vector" ? "vector" : "local";
+    const d = p.datos as Array<{ via?: string }> | { region?: string } | undefined;
+    if (p.tipo !== "resultado" || !d) continue;
+    if (Array.isArray(d) && d[0]?.via) return d[0].via === "vector" ? "vector" : "local";
+    if (!Array.isArray(d) && d.region) tabla = true;
   }
-  return null;
+  return tabla ? "tabla" : null;
 }
 
 /* ───────── utilidades ───────── */

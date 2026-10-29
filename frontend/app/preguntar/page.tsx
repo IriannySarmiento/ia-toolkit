@@ -15,7 +15,7 @@ const EJEMPLOS = [
 export default function Preguntar() {
   const [pregunta, setPregunta] = useState("");
   const [ocupado, setOcupado] = useState(false);
-  const [resp, setResp] = useState<{ respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | null; traza: Paso[] } | null>(null);
+  const [resp, setResp] = useState<{ respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | "tabla" | null; traza: Paso[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function enviar(p = pregunta) {
@@ -23,7 +23,7 @@ export default function Preguntar() {
     setOcupado(true); setError(null); setResp(null); setPregunta(p);
     const r = await api.preguntar(p.trim());
     setOcupado(false);
-    if (r.ok) setResp(r.datos as { respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | null; traza: Paso[] });
+    if (r.ok) setResp(r.datos as { respuesta: string; fuentes: string[]; modelo: string; via?: "vector" | "local" | "tabla" | null; traza: Paso[] });
     else setError((r.datos as { error?: string }).error ?? `Error ${r.status}`);
   }
 
@@ -42,7 +42,7 @@ export default function Preguntar() {
       {error && <div className="aviso">{error}</div>}
       {resp && (
         <div className="caja">
-          <h3>Respuesta ({resp.modelo}){resp.via && <span style={{ fontWeight: 400, color: "var(--gris)" }}> · búsqueda {resp.via === "vector" ? "por significado" : "por palabras"}</span>}</h3>
+          <h3>Respuesta ({resp.modelo}){resp.via && <span style={{ fontWeight: 400, color: "var(--gris)" }}> · {resp.via === "vector" ? "búsqueda por significado" : resp.via === "tabla" ? "consulta exacta a la tabla regional" : "búsqueda por palabras"}</span>}</h3>
           <p style={{ fontSize: 18, margin: "0 0 10px" }}>{resp.respuesta}</p>
           {resp.fuentes.length > 0 && (
             <ul className="fuentes">
