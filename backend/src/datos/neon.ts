@@ -42,12 +42,14 @@ export async function asegurarEsquema(sql: Sql): Promise<void> {
 
 /** Cuántos trozos y regiones hay (sin fallar si las tablas todavía no existen). */
 export async function contar(sql: Sql): Promise<{ trozos: number; regiones: number; trimestre: string | null }> {
-  const [f] = await consultar<{ trozos: number | null; regiones: number | null; trimestre: string | null }>(sql, `
-    SELECT
-      CASE WHEN to_regclass('trozos') IS NULL THEN 0 ELSE (SELECT count(*)::int FROM trozos) END AS trozos,
-      CASE WHEN to_regclass('tasas_regionales') IS NULL THEN 0 ELSE (SELECT count(*)::int FROM tasas_regionales) END AS regiones,
-      CASE WHEN to_regclass('tasas_regionales') IS NULL THEN NULL
-           ELSE (SELECT trimestre FROM tasas_regionales ORDER BY fecha_publicacion DESC NULLS LAST LIMIT 1) END AS trimestre`);
+  // Primero se pregunta si las tablas existen: Postgres rechaza una consulta que nombra una tabla inexistente.
+  const [t] = await consultar<{ hay_trozos: boolean; hay_regiones: boolean }>(sql,
+    `SELECT to_regclass('trozos') IS NOT NULL AS hay_trozos, to_regclass('tasas_regionales') IS NOT NULL AS hay_regiones`);
+  if (!t?.hay_trozos || !t?.hay_regiones) return { trozos: 0, regiones: 0, trimestre: null };
+  const [f] = await consultar<{ trozos: number; regiones: number; trimestre: string | null }>(sql, `
+    SELECT (SELECT count(*)::int FROM trozos) AS trozos,
+           (SELECT count(*)::int FROM tasas_regionales) AS regiones,
+           (SELECT trimestre FROM tasas_regionales ORDER BY fecha_publicacion DESC NULLS LAST LIMIT 1) AS trimestre`);
   return { trozos: f?.trozos ?? 0, regiones: f?.regiones ?? 0, trimestre: f?.trimestre ?? null };
 }
 
