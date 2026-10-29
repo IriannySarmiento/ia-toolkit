@@ -8,7 +8,7 @@ import type { Env } from "./tipos";
 import { conectar, contar } from "./datos/neon";
 import { indexar } from "./datos/indexar";
 import { leerRegiones } from "./datos/regiones";
-import { evaluar } from "./datos/evaluar";
+import { evaluar, evaluarHtml } from "./datos/evaluar";
 import { exportarCsv } from "./datos/exportar";
 
 /** Para GET /: ¿el agente busca por significado o por palabras? ¿Cuántos trozos y regiones tiene? */
@@ -30,7 +30,7 @@ export async function estadoRag(env: Env) {
 export const RUTAS_DATOS = {
   "GET /indexar": "llena la base de datos en Neon. ?clave=<CLAVE_APROBACION>. Opcional: &boletin=336, &regiones=1, &reiniciar=1",
   "GET /regiones": "tasas de desocupación de las 16 regiones del último trimestre",
-  "GET /evaluar": "compara búsquedas con el banco de preguntas: ?via=local o ?via=vector",
+  "GET /evaluar": "compara la búsqueda por palabras y por significado con el banco de preguntas (tabla en el navegador; ?via=local|vector&formato=json para los datos)",
   "GET /exportar.csv": "cifras y fuentes de los borradores y las regiones, para Excel o Sheets",
 };
 
@@ -54,6 +54,9 @@ export function registrarRutasDatos(app: Hono<{ Bindings: Env }>) {
   });
 
   app.get("/evaluar", async (c) => {
+    // En el navegador y sin ?via: la tabla con las dos búsquedas lado a lado. Si no, los datos en JSON.
+    const enNavegador = (c.req.header("accept") ?? "").includes("text/html") && c.req.query("formato") !== "json";
+    if (enNavegador && !c.req.query("via")) return c.html(await evaluarHtml(c.env));
     const via = c.req.query("via") === "vector" ? "vector" : "local";
     const max = Math.min(Math.max(Number(c.req.query("max")) || 1, 1), 5);
     const r = await evaluar(c.env, via, max);

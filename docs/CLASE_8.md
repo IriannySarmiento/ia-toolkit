@@ -120,6 +120,20 @@ una regla en `objetivo.md`, una línea al final de `respuesta-ene.md`, `NOMBRE_E
 transparencia y "Mis direcciones" se mezcló con la actualización de la clase 8 **sin conflictos**; el resultado
 compila y construye. Falta la prueba con el botón real **Sync fork** en un fork de otra cuenta.
 
+### Resultado de `/evaluar` en el ensayo (para la discusión de clase)
+
+Mejor fragmento por pregunta. "Acierta" = trae el documento esperado (las 3 trampas no cuentan).
+
+| | Por palabras | Por significado |
+|---|---|---|
+| Aciertos | 10 de 15 | 11 de 15 |
+| Dónde falla | "¿cuántas personas desocupadas?" e "informalidad" traen el boletín de la RM (mismas palabras); "trimestre móvil", "puntos porcentuales" y "cómo se calcula" no encuentran el glosario | "tasa de las mujeres" trae la RM; "ajustada estacionalmente" trae el 334 en vez del 335; "¿la ENE entrega datos por región?" y la comuna traen la RM |
+| Trampas (causas, proyecciones, comuna) | Siempre devuelve algo | Siempre devuelve algo |
+
+Para la clase: la búsqueda por significado arregla las preguntas de definiciones, pero no es perfecta; ninguna
+búsqueda "sabe" que algo no consta (lo decide el modelo con el objetivo y el procedimiento); y "¿qué región tiene
+la tasa más alta?" no se responde buscando texto: se responde con la tabla.
+
 ## Motor del agente: `propio` o `adk`
 
 `MOTOR` en `backend/wrangler.jsonc` elige el motor del bucle. El valor por defecto del maestro es `propio`.
@@ -139,5 +153,10 @@ compila y construye. Falta la prueba con el botón real **Sync fork** en un fork
 | 22-10-2026 | `/correr?forzar=1`, motor adk, Gemini | 26 s, 5 cifras con fuente, sin errores de CPU |
 | 27-10-2026 | Matriz sin `DATABASE_URL` (local) | `rag: "local"`; `/regiones` desde el archivo (16); `/evaluar?via=local` 18 preguntas; `/exportar.csv` con BOM; `/correr` igual que en la clase 7 |
 | 27-10-2026 | Bundle del backend | 678 KB gzip (límite 3 MB) |
-| _pendiente_ | `/indexar` con Neon real: segundos y CPU (Logs) | |
-| _pendiente_ | Neon dormido: latencia de la primera consulta tras 6 minutos | |
+| 28-10-2026 | `GET /` recién puesto `DATABASE_URL` | Error "relation trozos does not exist" (arreglado en 5cea147); ahora dice "Neon conectado pero vacío" |
+| 28-10-2026 | `/indexar` completo en producción (Neon AWS us-east-2) | **9,6 s**: 5 documentos, 43 trozos, 43 vectores, 16 regiones. Panel → Metrics: CPU **7 ms**, 0 "Exceeded CPU Time Limits", 0 errores. Gemini ~1,9 s por lote, Neon ~185 ms por consulta |
+| 28-10-2026 | `GET /` con índice | `rag: "vector"`, 43 trozos, 16 regiones, 0,8 s |
+| 28-10-2026 | `/preguntar` texto (desocupada vs inactiva) | 12,9 s, `via: vector`, respuesta correcta con fuente (glosario) |
+| 28-10-2026 | `/preguntar` "Ñuble", "santiago", "comuna de Puente Alto" | 7–9 s; `tasa_por_region` con "Ñuble", "RM" y "Región Metropolitana"; las dos últimas aclaran que la ENE no entrega comunas y ofrecen la RM |
+| 28-10-2026 | `/evaluar` | local 0,9 s; vector 3,6 s (18 vectores en una llamada, 1 consulta a Neon). Ver resultado abajo |
+| 28-10-2026 | `/exportar.csv` | BOM UTF-8, 44 filas (borradores + 16 regiones) |
